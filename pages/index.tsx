@@ -12,10 +12,9 @@ import TabContent from '@/components/tabs/TabContent';
 import Footer from '@/components/Footer';
 import IntroAnimation from '@/components/IntroAnimation';
 
-const Index = () => {
+export default function Home() {
   const [showIntro, setShowIntro] = useState(true);
   const [cosmicPoints, setCosmicPoints] = useState(0);
-  const [enhancedStars, setEnhancedStars] = useState(true);
   const { getWeatherConditionClass } = useWeather();
   
   useEffect(() => {
@@ -35,7 +34,6 @@ const Index = () => {
   }, []);
   
   const weatherClass = getWeatherConditionClass();
-
   const totalFocusMinutes = getTotalFocusMinutes();
   const { level } = getRank(totalFocusMinutes);
   const { progressPercent } = getNextRankProgress(totalFocusMinutes);
@@ -44,7 +42,7 @@ const Index = () => {
     <div className="h-screen w-screen overflow-hidden">
       <SpaceBackground 
         weatherCondition={weatherClass} 
-        enhancedStars={enhancedStars}
+        enhancedStars={true}
       >
         <IntroAnimation show={showIntro} />
         
@@ -67,6 +65,4 @@ const Index = () => {
       </SpaceBackground>
     </div>
   );
-};
-
-export default Index;
+}

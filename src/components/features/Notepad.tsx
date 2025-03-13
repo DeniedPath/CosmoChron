@@ -1,153 +1,156 @@
+
 import React, { useState, useEffect } from 'react';
-import { X, Check, Plus, Trash, FileText } from 'lucide-react';
-import { getNotes, saveNotes, Notes } from '@/utils/storageUtils';
+import { Book, Save, Trash2, X } from 'lucide-react';
+import { Button } from '../ui/button';
+import { Card, CardContent, CardFooter, CardHeader } from '../ui/card';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
+import { useNotes } from '@/hooks/useNotes';
 
-interface NotepadProps {
-  isVisible: boolean;
-  onClose: () => void;
-}
+const Notepad = () => {
+  const { notes, addNote, updateNote, deleteNote, activeNote, setActiveNote } = useNotes();
+  const [noteContent, setNoteContent] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
 
-const Notepad: React.FC<NotepadProps> = ({ isVisible, onClose }) => {
-  const [notes, setNotes] = useState<Notes>({ items: [] });
-  const [newNote, setNewNote] = useState('');
-  const [isAdding, setIsAdding] = useState(false);
-  
+  // Update noteContent when activeNote changes
   useEffect(() => {
-    setNotes(getNotes());
-  }, []);
-  
-  useEffect(() => {
-    if (notes.items.length > 0) {
-      saveNotes(notes);
+    if (activeNote) {
+      setNoteContent(activeNote.content);
+    } else {
+      setNoteContent('');
     }
-  }, [notes]);
-  
-  const handleAddNote = () => {
-    if (newNote.trim()) {
-      const updatedNotes = {
-        items: [
-          {
-            id: `note-${Date.now()}`,
-            content: newNote,
-            createdAt: Date.now(),
-            updatedAt: Date.now(),
-          },
-          ...notes.items,
-        ],
-      };
-      
-      setNotes(updatedNotes);
-      setNewNote('');
-      setIsAdding(false);
-      saveNotes(updatedNotes);
+  }, [activeNote]);
+
+  const handleSave = () => {
+    if (activeNote) {
+      updateNote(activeNote.id, noteContent);
+    } else {
+      addNote(noteContent);
     }
   };
-  
-  const handleDeleteNote = (id: string) => {
-    const updatedNotes = {
-      items: notes.items.filter(note => note.id !== id),
-    };
-    
-    setNotes(updatedNotes);
-    saveNotes(updatedNotes);
+
+  const handleNewNote = () => {
+    setActiveNote(null);
+    setNoteContent('');
   };
-  
-  const formatDate = (timestamp: number) => {
-    return new Date(timestamp).toLocaleDateString(undefined, {
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
+
+  const handleNoteSelect = (note) => {
+    setActiveNote(note);
   };
-  
-  if (!isVisible) return null;
-  
+
+  const handleDelete = () => {
+    if (activeNote) {
+      deleteNote(activeNote.id);
+      setActiveNote(null);
+      setNoteContent('');
+    }
+  };
+
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center bg-cosmic-dark/80 backdrop-blur-sm animate-fade-in p-4">
-      <div className="w-full max-w-lg max-h-[90vh] overflow-auto cosmic-card">
-        <div className="flex justify-between items-center p-4 border-b border-white/10">
-          <h2 className="text-xl font-medium flex items-center">
-            <FileText className="w-5 h-5 mr-2" /> Notepad
-          </h2>
-          <button
-            onClick={onClose}
-            className="p-2 rounded-full hover:bg-white/10 transition-colors"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
-        
-        <div className="p-4">
-          {isAdding ? (
-            <div className="mb-4 bg-cosmic-deep p-4 rounded-xl border border-white/10">
-              <textarea
-                value={newNote}
-                onChange={(e) => setNewNote(e.target.value)}
-                placeholder="Type your thoughts here..."
-                className="cosmic-input w-full h-28 resize-none mb-2"
-                autoFocus
-              />
-              
-              <div className="flex justify-end gap-2">
-                <button
-                  onClick={() => {
-                    setIsAdding(false);
-                    setNewNote('');
-                  }}
-                  className="cosmic-button-secondary px-3 py-1"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleAddNote}
-                  className="cosmic-button px-3 py-1 flex items-center"
-                  disabled={!newNote.trim()}
-                >
-                  <Check className="w-4 h-4 mr-1" /> Save
-                </button>
-              </div>
+    <Popover open={isOpen} onOpenChange={setIsOpen}>
+      <PopoverTrigger asChild>
+        <Button 
+          variant="ghost" 
+          size="icon"
+          className="rounded-full h-9 w-9 bg-cosmic-blue/20 hover:bg-cosmic-blue/30 text-cosmic-white/70"
+        >
+          <Book className="h-5 w-5" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent 
+        side="left" 
+        className="w-[350px] md:w-[450px] p-0 bg-cosmic-dark border border-cosmic-highlight/20 backdrop-blur-md"
+      >
+        <Card className="border-0 bg-transparent shadow-none text-cosmic-white">
+          <CardHeader className="flex flex-row items-center justify-between p-4 pb-2 border-b border-cosmic-highlight/20">
+            <div className="flex items-center space-x-2">
+              <Book className="h-5 w-5 text-cosmic-highlight" />
+              <h3 className="font-medium">Cosmic Notes</h3>
             </div>
-          ) : (
-            <button
-              onClick={() => setIsAdding(true)}
-              className="w-full cosmic-button-secondary p-3 mb-4 flex items-center justify-center"
-            >
-              <Plus className="w-4 h-4 mr-1" /> Add Note
-            </button>
-          )}
+            <div className="flex items-center space-x-2">
+              <Button 
+                variant="ghost" 
+                size="icon"
+                className="h-8 w-8 rounded-full bg-cosmic-blue/10 hover:bg-cosmic-blue/20 text-cosmic-white/70"
+                onClick={handleNewNote}
+              >
+                <span className="text-lg">+</span>
+              </Button>
+              <Button 
+                variant="ghost" 
+                size="icon"
+                className="h-8 w-8 rounded-full bg-cosmic-blue/10 hover:bg-cosmic-blue/20 text-cosmic-white/70"
+                onClick={() => setIsOpen(false)}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+          </CardHeader>
           
-          {notes.items.length === 0 ? (
-            <div className="text-center py-8 text-white/60">
-              <p>No notes yet. Add one to get started!</p>
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {notes.items.map((note) => (
-                <div 
-                  key={note.id}
-                  className="bg-cosmic-deep p-4 rounded-xl border border-white/10"
-                >
-                  <div className="flex justify-between items-start mb-2">
-                    <div className="text-xs text-white/60">
-                      {formatDate(note.createdAt)}
-                    </div>
-                    <button
-                      onClick={() => handleDeleteNote(note.id)}
-                      className="p-1 rounded-full hover:bg-white/10 text-white/60 hover:text-white transition-colors"
+          <CardContent className="p-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="md:col-span-1 space-y-2 border-r border-cosmic-highlight/10 pr-3">
+              <p className="text-xs text-cosmic-white/50 mb-2">Your Notes</p>
+              {notes.length === 0 ? (
+                <p className="text-xs italic text-cosmic-white/30">No notes yet</p>
+              ) : (
+                <div className="space-y-2 max-h-[200px] overflow-y-auto pr-2">
+                  {notes.map((note) => (
+                    <div 
+                      key={note.id}
+                      onClick={() => handleNoteSelect(note)}
+                      className={`p-2 rounded cursor-pointer text-sm transition-colors truncate
+                        ${activeNote?.id === note.id 
+                          ? "bg-cosmic-purple/40 text-cosmic-white" 
+                          : "hover:bg-cosmic-blue/20 text-cosmic-white/70"
+                        }`}
                     >
-                      <Trash className="w-4 h-4" />
-                    </button>
-                  </div>
-                  
-                  <p className="whitespace-pre-wrap">{note.content}</p>
+                      {note.content.substring(0, 24)}
+                      {note.content.length > 24 ? "..." : ""}
+                    </div>
+                  ))}
                 </div>
-              ))}
+              )}
             </div>
-          )}
-        </div>
-      </div>
-    </div>
+            
+            <div className="md:col-span-2">
+              <textarea 
+                className="w-full h-[200px] px-3 py-2 bg-cosmic-blue/10 border border-cosmic-highlight/20 
+                          rounded-md text-cosmic-white resize-none focus:outline-none focus:ring-1 
+                          focus:ring-cosmic-highlight/40"
+                placeholder="Write your cosmic thoughts here..."
+                value={noteContent}
+                onChange={(e) => setNoteContent(e.target.value)}
+              />
+            </div>
+          </CardContent>
+          
+          <CardFooter className="p-4 pt-2 border-t border-cosmic-highlight/20 flex justify-between">
+            {activeNote && (
+              <Button 
+                variant="ghost" 
+                size="sm"
+                className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
+                onClick={handleDelete}
+              >
+                <Trash2 className="h-4 w-4 mr-1" />
+                Delete
+              </Button>
+            )}
+            <div className="ml-auto">
+              <Button 
+                variant="ghost" 
+                size="sm"
+                className="bg-cosmic-blue/20 hover:bg-cosmic-blue/30 text-cosmic-white"
+                onClick={handleSave}
+                disabled={!noteContent.trim()}
+              >
+                <Save className="h-4 w-4 mr-1" />
+                Save Note
+              </Button>
+            </div>
+          </CardFooter>
+        </Card>
+      </PopoverContent>
+    </Popover>
   );
 };
 
