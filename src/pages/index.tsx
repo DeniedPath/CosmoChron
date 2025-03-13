@@ -7,7 +7,6 @@ import { getCosmicPoints } from '@/utils/missionUtils';
 import { useWeather } from '@/hooks/useWeather';
 import { getTotalFocusMinutes, getRank, getNextRankProgress } from '@/utils/timerUtils';
 
-
 // Import the components
 import Header from '@/components/Header';
 import TabsNavigation from '@/components/tabs/TabsNavigation';

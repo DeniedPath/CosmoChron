@@ -1,8 +1,6 @@
-
 import React, { useState, useEffect } from 'react';
 import useTimer from '@/hooks/useTimer';
 import TimerControls from './TimerControls';
-import SpaceParticles from '../space/SpaceParticles';
 import BreathingGuide from '../features/BreathingGuide';
 import Notepad from '../features/Notepad';
 import { formatTime, getRandomSpaceFact } from '@/utils/timerUtils';
@@ -142,13 +140,6 @@ const Timer = () => {
             </linearGradient>
           </defs>
         </svg>
-        
-        {/* Particles effect */}
-        <SpaceParticles 
-          active={state === 'running'} 
-          intensity={state === 'running' ? 'medium' : 'low'} 
-          particleType={particleType} 
-        />
         
         {/* Timer display or breathing guide */}
         {showBreathingGuide ? (
