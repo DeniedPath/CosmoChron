@@ -1,3 +1,5 @@
+// src/hooks/use-toast.ts
+// This is the corrected implementation to ensure toast works properly
 import * as React from "react"
 
 import type {

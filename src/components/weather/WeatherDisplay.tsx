@@ -1,3 +1,4 @@
+// src/components/WeatherDisplay.tsx
 
 import React from 'react';
 import { useWeather } from '@/hooks/useWeather';
@@ -37,20 +38,25 @@ const WeatherDisplay: React.FC<WeatherDisplayProps> = ({ compact = false }) => {
   } = useWeather();
   
   const getIconComponent = () => {
-    const iconName = getWeatherIcon();
-    const iconProps = { className: 'h-5 w-5' };
-    
-    switch (iconName) {
-      case 'sun': return <Sun {...iconProps} />;
-      case 'moon': return <Moon {...iconProps} />;
-      case 'cloud': return <Cloud {...iconProps} />;
-      case 'cloud-sun': return <CloudSun {...iconProps} />;
-      case 'cloud-moon': return <CloudMoon {...iconProps} />;
-      case 'cloud-rain': return <CloudRain {...iconProps} />;
-      case 'cloud-snow': return <CloudSnow {...iconProps} />;
-      case 'cloud-fog': return <CloudFog {...iconProps} />;
-      case 'cloud-lightning': return <CloudLightning {...iconProps} />;
-      default: return <Sun {...iconProps} />;
+    try {
+      const iconName = getWeatherIcon();
+      const iconProps = { className: 'h-5 w-5' };
+      
+      switch (iconName) {
+        case 'sun': return <Sun {...iconProps} />;
+        case 'moon': return <Moon {...iconProps} />;
+        case 'cloud': return <Cloud {...iconProps} />;
+        case 'cloud-sun': return <CloudSun {...iconProps} />;
+        case 'cloud-moon': return <CloudMoon {...iconProps} />;
+        case 'cloud-rain': return <CloudRain {...iconProps} />;
+        case 'cloud-snow': return <CloudSnow {...iconProps} />;
+        case 'cloud-fog': return <CloudFog {...iconProps} />;
+        case 'cloud-lightning': return <CloudLightning {...iconProps} />;
+        default: return <Sun {...iconProps} />;
+      }
+    } catch (e) {
+      console.error("Error getting weather icon:", e);
+      return <Sun className="h-5 w-5" />;
     }
   };
   
@@ -164,7 +170,7 @@ const WeatherDisplay: React.FC<WeatherDisplayProps> = ({ compact = false }) => {
         {/* Error message */}
         {error && (
           <div className="text-xs text-cosmic-highlight/80 mb-3">
-            {error}. <button className="underline" onClick={fetchWeatherByLocation}>Retry</button>
+            {error} <button className="underline" onClick={fetchWeatherByLocation}>Retry</button>
           </div>
         )}
         

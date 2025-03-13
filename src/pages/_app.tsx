@@ -1,3 +1,5 @@
+
+import '@/styles/index.css'; // Import your index.css file
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -16,4 +18,4 @@ const App = ({ Component, pageProps }: AppProps) => (
   </QueryClientProvider>
 );
 
-export default App; 
+export default App;

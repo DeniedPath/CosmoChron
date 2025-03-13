@@ -1,5 +1,6 @@
+// src/services/weatherService.ts
 
-const API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY || "demo"; 
+const API_KEY = "demo"; 
 
 export interface WeatherData {
   main: string;        // Main weather condition (Clear, Clouds, Rain, etc.)
@@ -11,7 +12,7 @@ export interface WeatherData {
   location: string;    // City name
 }
 
-const DEFAULT_WEATHER: WeatherData = {
+export const DEFAULT_WEATHER: WeatherData = {
   main: "Clear",
   description: "clear sky",
   temp: 20,
@@ -32,14 +33,20 @@ export const fetchWeatherByCoords = async (
     }
 
     const response = await fetch(
-      `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`
+      `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`,
+      { signal: AbortSignal.timeout(10000) } // 10 second timeout
     );
 
     if (!response.ok) {
-      throw new Error("Weather data could not be fetched");
+      throw new Error(`Weather data could not be fetched: ${response.status}`);
     }
 
     const data = await response.json();
+    
+    // Validate response has the expected format
+    if (!data.weather || !data.weather[0] || !data.main) {
+      throw new Error("Invalid weather data format");
+    }
     
     return {
       main: data.weather[0].main,
@@ -56,7 +63,6 @@ export const fetchWeatherByCoords = async (
   }
 };
 
-// This function is still useful for the initial load if geolocation fails
 export const fetchWeatherByCity = async (
   city: string
 ): Promise<WeatherData> => {
@@ -67,14 +73,20 @@ export const fetchWeatherByCity = async (
     }
 
     const response = await fetch(
-      `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`
+      `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&appid=${API_KEY}&units=metric`,
+      { signal: AbortSignal.timeout(10000) } // 10 second timeout
     );
 
     if (!response.ok) {
-      throw new Error("Weather data could not be fetched");
+      throw new Error(`Weather data could not be fetched: ${response.status}`);
     }
 
     const data = await response.json();
+    
+    // Validate response has the expected format
+    if (!data.weather || !data.weather[0] || !data.main) {
+      throw new Error("Invalid weather data format");
+    }
     
     return {
       main: data.weather[0].main,

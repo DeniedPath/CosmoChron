@@ -1,14 +1,13 @@
+// src/components/SpaceBackground.tsx
+
 import React, { ReactNode, useState, useEffect } from 'react';
-import dynamic from 'next/dynamic';
 import SpaceParticles from './SpaceParticles';
+import StarField from './StarField';
 import CosmicElements from './CosmicElements';
 import WeatherEffects from '../weather/WeatherEffects';
 import WeatherBackgroundStyle from '../weather/WeatherBackgroundStyle';
 import PlanetarySystem from './PlanetarySystem';
 import ShootingStars from './ShootingStars';
-
-// Import StarField component with client-side only rendering
-const StarField = dynamic(() => import('./StarField'), { ssr: false });
 
 interface SpaceBackgroundProps {
   children: ReactNode;
@@ -18,26 +17,31 @@ interface SpaceBackgroundProps {
 
 const SpaceBackground: React.FC<SpaceBackgroundProps> = ({ 
   children,
-  weatherCondition = 'weather-clear',
+  weatherCondition = 'weather-clear', // Default value ensures it always has a valid value
   enhancedStars = true
 }) => {
   const [mounted, setMounted] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
   
   useEffect(() => {
     setMounted(true);
-    setIsMounted(true);
     
     // Force repaint of background elements
     const timer = setTimeout(() => {
-      document.body.classList.add('bg-loaded');
+      try {
+        document.body.classList.add('bg-loaded');
+      } catch (e) {
+        console.error("Error adding bg-loaded class:", e);
+      }
     }, 100);
     
     return () => {
       setMounted(false);
-      setIsMounted(false);
       clearTimeout(timer);
-      document.body.classList.remove('bg-loaded');
+      try {
+        document.body.classList.remove('bg-loaded');
+      } catch (e) {
+        console.error("Error removing bg-loaded class:", e);
+      }
     };
   }, []);
   
@@ -46,9 +50,9 @@ const SpaceBackground: React.FC<SpaceBackgroundProps> = ({
       {/* Animated Background */}
       <WeatherBackgroundStyle weatherCondition={weatherCondition}>
         {/* Star field components with increased opacity */}
-        {isMounted && <StarField />}
+        <StarField />
         
-        {/* Add space particles for stars and cosmic effects with extremely high intensity */}
+        {/* Add space particles for stars and cosmic effects with configurable intensity */}
         <SpaceParticles active={true} intensity={enhancedStars ? "high" : "medium"} particleType="stars" />
         <SpaceParticles active={true} intensity="medium" particleType="cosmic" />
         <SpaceParticles active={true} intensity="low" particleType="meteor" />
