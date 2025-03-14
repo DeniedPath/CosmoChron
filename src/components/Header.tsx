@@ -1,9 +1,9 @@
 import React from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Trophy, HelpCircle, Settings, Rocket } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import WeatherDisplay from '@/components/weather/WeatherDisplay';
-import { useRouter } from 'next/router';
-import Link from 'next/link';
 
 interface HeaderProps {
   cosmicPoints: number;
@@ -34,14 +34,14 @@ const Header: React.FC<HeaderProps> = ({ cosmicPoints }) => {
         </div>
         
         <div className="flex space-x-2">
-          <Link href="/help" legacyBehavior>
-              <Button 
-                variant="ghost" 
-                size="icon"
-                className="rounded-full h-9 w-9 bg-cosmic-blue/20 hover:bg-cosmic-blue/30 text-cosmic-white/70"
-              >
-                <HelpCircle className="h-5 w-5" />
-              </Button>
+          <Link href="/help">
+            <Button 
+              variant="ghost" 
+              size="icon"
+              className="rounded-full h-9 w-9 bg-cosmic-blue/20 hover:bg-cosmic-blue/30 text-cosmic-white/70"
+            >
+              <HelpCircle className="h-5 w-5" />
+            </Button>
           </Link>
           
           <Button 

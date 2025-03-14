@@ -1,8 +1,8 @@
+"use client";
+
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { ChevronLeft, Save, Moon, Sun, Cloud, Thermometer, Bell, Shield, Key, Rocket, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
@@ -10,34 +10,12 @@ import { Slider } from '@/components/ui/slider';
 import { Input } from '@/components/ui/input';
 import { toast } from "sonner";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import SpaceBackground from '@/components/SpaceBackground';
-
-// Form schema for API key
-const apiKeySchema = z.object({
-  apiKey: z.string().min(0),
-});
-
-type ApiKeyFormValues = z.infer<typeof apiKeySchema>;
+import SpaceBackground from '@/components/space/SpaceBackground';
 
 const SettingsPage: React.FC = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
   
   // State for various settings
   const [enhancedStars, setEnhancedStars] = useState(true);
@@ -48,30 +26,23 @@ const SettingsPage: React.FC = () => {
   const [darkMode, setDarkMode] = useState(true);
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [enabledAnimations, setEnabledAnimations] = useState(true);
+  const [apiKey, setApiKey] = useState("");
   
-  // Form for API key - simplified
-  const form = useForm<ApiKeyFormValues>({
-    resolver: zodResolver(apiKeySchema),
-    defaultValues: {
-      apiKey: "",
-    },
-  });
+  const handleBackClick = () => {
+    router.push('/');
+  };
 
-  const onSubmit = (data: ApiKeyFormValues) => {
-    if (data.apiKey) {
+  const handleSaveAllSettings = () => {
+    toast.success("Settings saved successfully!");
+  };
+
+  const handleApiKeySave = () => {
+    if (apiKey) {
       // Here you would actually save the API key, but for demo we just show a toast
       toast.success("API key saved successfully!");
     } else {
       toast.info("Using demo weather data");
     }
-  };
-
-  const handleBackClick = () => {
-    navigate(-1);
-  };
-
-  const handleSaveAllSettings = () => {
-    toast.success("Settings saved successfully!");
   };
 
   return (
@@ -200,12 +171,12 @@ const SettingsPage: React.FC = () => {
                     <div className="flex gap-2 items-center">
                       <Input 
                         placeholder="Enter your OpenWeather API key"
-                        value={form.watch("apiKey")}
-                        onChange={(e) => form.setValue("apiKey", e.target.value)}
+                        value={apiKey}
+                        onChange={(e) => setApiKey(e.target.value)}
                         className="bg-cosmic-blue/10 border-cosmic-highlight/20 text-cosmic-white"
                       />
                       <Button 
-                        onClick={() => onSubmit(form.getValues())} 
+                        onClick={handleApiKeySave} 
                         size="sm"
                       >
                         Save
