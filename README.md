@@ -1,6 +1,6 @@
-# Space Time
+# CosmoChron
 
-A celestial-themed Focus Timer that helps users manage their time effectively through immersive space backgrounds, achievement systems, productivity tracking, and interactive features.
+An Ai powered celestial-themed Focus Timer that helps users manage their time effectively through immersive space backgrounds, achievement systems, productivity tracking, and interactive features.
 
 ## 🚀 Features
 
@@ -38,8 +38,8 @@ A celestial-themed Focus Timer that helps users manage their time effectively th
 Clone the repository:
 
 ```sh
-git clone https://github.com/yourusername/space-time.git
-cd space-time
+git clone https://github.com/yourusername/CosmoChron.git
+cd CosmoChron
 ```
 
 Install dependencies:
@@ -69,11 +69,6 @@ http://localhost:3000
 4. **Reset**: Start fresh with a new timer session
 5. **Complete Session**: Receive visual notification when your session completes
 
-### Space Theme
-1. **Background Selection**: Choose between particles or solar system visualization
-2. **Planet Focus**: Select different planets to view during your focus sessions
-3. **Ambient Experience**: Enjoy a calming space environment while you work
-
 ### Breathing Guidance
 1. **Toggle Feature**: Enable/disable breathing guidance in settings
 2. **Follow Animation**: Sync your breathing with the expanding and contracting animation
@@ -85,10 +80,10 @@ http://localhost:3000
 3. **Session History**: Review your recent focus sessions
 4. **Filter Data**: View analytics for the past week, month, or year
 
-### Achievements
+### Missions (achivements)
 1. **Unlock Milestones**: Complete sessions to unlock various achievements
 2. **Track Progress**: View your achievement collection and completion status
-3. **Discover Secrets**: Find hidden achievements through special interactions
+3. **Discover Secrets**: Find hidden achievements through special interactions (coming soon)
 
 ### Settings
 1. **Sound Preferences**: Toggle completion sounds on/off
