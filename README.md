@@ -3,7 +3,7 @@
 CosmoChron is an AI-powered celestial-themed Focus Timer that helps users manage their time effectively through immersive space backgrounds, achievement systems, productivity tracking, and interactive features.
 
 <p align="center">
-  <img src="./public/CosmoChron.png" alt="CosmoChron Logo" width="200" />
+  <img src="./public/CosmoChron.jpeg" alt="CosmoChron Logo" width="200" />
 </p>
 
 ## 🚀 Features
