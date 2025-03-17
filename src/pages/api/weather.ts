@@ -1,8 +1,8 @@
 // src/pages/api/weather.ts
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-// Updated API key - in production, this should be stored in environment variables
-const OPENWEATHER_API_KEY = "8d9e53b9f4c9e5a0e8d9b5a0e8d9b5a0";
+// Get API key from environment variables
+const WEATHER_API_KEY = process.env.WEATHER_API_KEY;
 
 // Mock weather data for fallback when API fails
 const generateMockWeatherData = (city?: string) => {
@@ -11,22 +11,25 @@ const generateMockWeatherData = (city?: string) => {
   const temp = Math.round(Math.random() * 25 + 5); // Random temp between 5-30°C
   
   return {
-    name: city ?? 'Your Location',
-    main: {
-      temp: temp + 273.15, // Convert to Kelvin as the API would return
-      feels_like: (temp + Math.random() * 3 - 1) + 273.15,
-      temp_min: (temp - Math.random() * 5) + 273.15,
-      temp_max: (temp + Math.random() * 5) + 273.15,
-      humidity: Math.round(Math.random() * 60 + 30)
+    location: {
+      name: city ?? 'Your Location',
+      region: '',
+      country: '',
+      lat: 0,
+      lon: 0
     },
-    weather: [{
-      main: condition.charAt(0).toUpperCase() + condition.slice(1),
-      description: `${condition} weather (mock data)`,
-      icon: getWeatherIcon(condition)
-    }],
-    wind: {
-      speed: Math.random() * 10,
-      deg: Math.round(Math.random() * 360)
+    current: {
+      temp_c: temp,
+      temp_f: (temp * 9/5) + 32,
+      condition: {
+        text: condition.charAt(0).toUpperCase() + condition.slice(1),
+        icon: getWeatherIcon(condition),
+        code: 1000
+      },
+      wind_kph: Math.random() * 20,
+      humidity: Math.round(Math.random() * 60 + 30),
+      feelslike_c: temp + Math.random() * 3 - 1,
+      feelslike_f: ((temp + Math.random() * 3 - 1) * 9/5) + 32
     }
   };
 };
@@ -35,15 +38,15 @@ const generateMockWeatherData = (city?: string) => {
 const getWeatherIcon = (condition: string): string => {
   switch (condition) {
     case 'clear':
-      return '01d';
+      return '//cdn.weatherapi.com/weather/64x64/day/113.png';
     case 'clouds':
-      return '03d';
+      return '//cdn.weatherapi.com/weather/64x64/day/116.png';
     case 'rain':
-      return '10d';
+      return '//cdn.weatherapi.com/weather/64x64/day/296.png';
     case 'snow':
-      return '13d';
+      return '//cdn.weatherapi.com/weather/64x64/day/326.png';
     default:
-      return '11d'; // thunderstorm
+      return '//cdn.weatherapi.com/weather/64x64/day/200.png'; // thunderstorm
   }
 };
 
@@ -67,20 +70,26 @@ export default async function handler(
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
+  // Check if API key is available
+  if (!WEATHER_API_KEY) {
+    console.warn('Weather API key is missing. Please add WEATHER_API_KEY to your .env.local file');
+    return res.status(200).json(generateMockWeatherData(req.query.city as string));
+  }
+
   try {
     const { lat, lon, city } = req.query;
     let url: string;
 
     // Determine which API endpoint to use based on provided parameters
     if (lat && lon) {
-      url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${OPENWEATHER_API_KEY}`;
+      url = `https://api.weatherapi.com/v1/current.json?key=${WEATHER_API_KEY}&q=${lat},${lon}&aqi=no`;
     } else if (city) {
-      url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city as string)}&appid=${OPENWEATHER_API_KEY}`;
+      url = `https://api.weatherapi.com/v1/current.json?key=${WEATHER_API_KEY}&q=${encodeURIComponent(city as string)}&aqi=no`;
     } else {
       return res.status(400).json({ error: 'Missing required parameters: lat & lon or city' });
     }
 
-    // Fetch weather data from OpenWeatherMap API
+    // Fetch weather data from WeatherAPI.com
     const response = await fetch(url);
     
     if (!response.ok) {

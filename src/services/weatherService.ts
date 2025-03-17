@@ -9,24 +9,28 @@ export interface WeatherData {
   temp: number;        // Temperature in Celsius
   humidity: number;    // Humidity percentage
   windSpeed: number;   // Wind speed
-  icon: string;        // Icon code from OpenWeatherMap
+  icon: string;        // Icon URL from WeatherAPI.com
   location: string;    // City name
 }
 
 export interface WeatherApiResponse {
-  weather: Array<{
-    main: string;
-    description: string;
-    icon: string;
-  }>;
-  main: {
-    temp: number;
+  location: {
+    name: string;
+    region: string;
+    country: string;
+  };
+  current: {
+    temp_c: number;
+    temp_f: number;
+    condition: {
+      text: string;
+      icon: string;
+      code: number;
+    };
+    wind_kph: number;
     humidity: number;
+    feelslike_c: number;
   };
-  wind: {
-    speed: number;
-  };
-  name: string;
 }
 
 // Default/fallback weather data
@@ -36,7 +40,7 @@ export const DEFAULT_WEATHER: WeatherData = {
   temp: 20,
   humidity: 60,
   windSpeed: 5,
-  icon: "01d",
+  icon: "//cdn.weatherapi.com/weather/64x64/day/113.png",
   location: "Cosmic Space"
 };
 
@@ -48,7 +52,7 @@ const MOCK_WEATHER_DATA: { [key: string]: WeatherData } = {
     temp: 25,
     humidity: 45,
     windSpeed: 3.5,
-    icon: "01d",
+    icon: "//cdn.weatherapi.com/weather/64x64/day/113.png",
     location: "Sunny Valley"
   },
   clouds: {
@@ -57,7 +61,7 @@ const MOCK_WEATHER_DATA: { [key: string]: WeatherData } = {
     temp: 18,
     humidity: 65,
     windSpeed: 4.2,
-    icon: "03d",
+    icon: "//cdn.weatherapi.com/weather/64x64/day/116.png",
     location: "Cloud City"
   },
   rain: {
@@ -66,7 +70,7 @@ const MOCK_WEATHER_DATA: { [key: string]: WeatherData } = {
     temp: 15,
     humidity: 80,
     windSpeed: 6.1,
-    icon: "10d",
+    icon: "//cdn.weatherapi.com/weather/64x64/day/296.png",
     location: "Rainy Harbor"
   },
   snow: {
@@ -75,7 +79,7 @@ const MOCK_WEATHER_DATA: { [key: string]: WeatherData } = {
     temp: -2,
     humidity: 85,
     windSpeed: 3.8,
-    icon: "13d",
+    icon: "//cdn.weatherapi.com/weather/64x64/day/326.png",
     location: "Snowflake Mountains"
   },
   thunderstorm: {
@@ -84,7 +88,7 @@ const MOCK_WEATHER_DATA: { [key: string]: WeatherData } = {
     temp: 17,
     humidity: 90,
     windSpeed: 8.5,
-    icon: "11d",
+    icon: "//cdn.weatherapi.com/weather/64x64/day/200.png",
     location: "Thunder Peak"
   }
 };
@@ -93,19 +97,17 @@ const MOCK_WEATHER_DATA: { [key: string]: WeatherData } = {
 const mapWeatherData = (apiData: WeatherApiResponse): WeatherData => {
   try {
     // Extract the main weather condition
-    const mainWeather = apiData.weather[0].main;
-    
-    // Map the icon code
-    const iconCode = apiData.weather[0].icon || "01d";
+    const conditionText = apiData.current.condition.text;
+    const mainWeather = conditionText.split(' ')[0]; // Take first word as main condition
     
     return {
       main: mainWeather,
-      description: apiData.weather[0].description,
-      temp: apiData.main.temp - 273.15, // Convert from Kelvin to Celsius
-      humidity: apiData.main.humidity,
-      windSpeed: apiData.wind.speed,
-      icon: iconCode,
-      location: apiData.name
+      description: conditionText,
+      temp: apiData.current.temp_c,
+      humidity: apiData.current.humidity,
+      windSpeed: apiData.current.wind_kph / 3.6, // Convert km/h to m/s
+      icon: apiData.current.condition.icon,
+      location: apiData.location.name
     };
   } catch (error) {
     console.error("Error mapping weather data:", error);
@@ -146,7 +148,7 @@ export const fetchWeatherByCoords = async (
   try {
     return await new Promise<WeatherData>((resolve) => {
       $.ajax({
-        // Use our Next.js API route instead of calling OpenWeatherMap directly
+        // Use our Next.js API route instead of calling WeatherAPI directly
         url: `/api/weather?lat=${lat}&lon=${lon}`,
         method: 'GET',
         dataType: 'json',
@@ -189,7 +191,7 @@ export const fetchWeatherByCity = async (
       const cityName = city && city.trim() !== "" ? city : "London";
       
       $.ajax({
-        // Use our Next.js API route instead of calling OpenWeatherMap directly
+        // Use our Next.js API route instead of calling WeatherAPI directly
         url: `/api/weather?city=${encodeURIComponent(cityName)}`,
         method: 'GET',
         dataType: 'json',

@@ -163,7 +163,7 @@ const WeatherDisplay: React.FC<WeatherDisplayProps> = ({ compact = false }) => {
           <div className="bg-cosmic-blue/10 p-2 rounded-lg flex flex-col items-center">
             <Wind className="h-4 w-4 text-cosmic-highlight/80 mb-1" />
             <span className="text-xs text-cosmic-white/70">Wind</span>
-            <span className="text-sm text-cosmic-white">{weatherData.windSpeed} km/h</span>
+            <span className="text-sm text-cosmic-white">{(weatherData.windSpeed * 3.6).toFixed(1)} km/h</span>
           </div>
         </div>
         

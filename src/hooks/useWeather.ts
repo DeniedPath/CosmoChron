@@ -150,6 +150,71 @@ export const useWeather = ({ city, autoFetch = true }: UseWeatherProps = {}) => 
     return `${roundedTemp}${unit}`;
   };
   
+  // Get weather icon based on condition
+  const getWeatherIcon = (): "sun" | "moon" | "cloud" | "cloud-sun" | "cloud-moon" | "cloud-rain" | "cloud-snow" | "cloud-fog" | "cloud-lightning" => {
+    if (!weatherData) return 'sun';
+    
+    const { main, icon } = weatherData;
+    // WeatherAPI.com uses URLs like //cdn.weatherapi.com/weather/64x64/day/113.png
+    // Check if it contains "night" or ends with codes typically used for night conditions
+    const isNight = icon.includes('night') || /\/\d+\.png$/.test(icon) && parseInt(icon.match(/\/(\d+)\.png$/)?.[1] || '0') > 113;
+    
+    switch (main.toLowerCase()) {
+      case 'clear':
+      case 'sunny':
+        return isNight ? 'moon' : 'sun';
+      case 'clouds':
+      case 'cloudy':
+      case 'partly':
+      case 'overcast':
+        return isNight ? 'cloud-moon' : 'cloud-sun';
+      case 'rain':
+      case 'drizzle':
+      case 'showers':
+        return 'cloud-rain';
+      case 'thunderstorm':
+      case 'thunder':
+        return 'cloud-lightning';
+      case 'snow':
+      case 'sleet':
+      case 'blizzard':
+        return 'cloud-snow';
+      case 'mist':
+      case 'fog':
+      case 'haze':
+        return 'cloud-fog';
+      default:
+        return isNight ? 'moon' : 'sun';
+    }
+  };
+
+  // Get weather condition class for styling
+  const getWeatherConditionClass = () => {
+    if (!weatherData) return 'weather-clear';
+    
+    const { main } = weatherData;
+    
+    switch (main.toLowerCase()) {
+      case 'clear':
+        return 'weather-clear';
+      case 'clouds':
+        return 'weather-clouds';
+      case 'rain':
+      case 'drizzle':
+        return 'weather-rain';
+      case 'thunderstorm':
+        return 'weather-storm';
+      case 'snow':
+        return 'weather-snow';
+      case 'mist':
+      case 'fog':
+      case 'haze':
+        return 'weather-mist';
+      default:
+        return 'weather-clear';
+    }
+  };
+
   // Initial fetch on mount
   useEffect(() => {
     if (!autoFetch || typeof window === 'undefined') return;
@@ -183,61 +248,6 @@ export const useWeather = ({ city, autoFetch = true }: UseWeatherProps = {}) => 
     
     return () => clearInterval(intervalId);
   }, [autoFetch, city, fetchWeatherForCity, fetchWeatherByLocation]);
-
-  // Get weather condition class for styling
-  const getWeatherConditionClass = () => {
-    if (!weatherData) return 'weather-clear';
-    
-    const { main } = weatherData;
-    
-    switch (main.toLowerCase()) {
-      case 'clear':
-        return 'weather-clear';
-      case 'clouds':
-        return 'weather-clouds';
-      case 'rain':
-      case 'drizzle':
-        return 'weather-rain';
-      case 'thunderstorm':
-        return 'weather-storm';
-      case 'snow':
-        return 'weather-snow';
-      case 'mist':
-      case 'fog':
-      case 'haze':
-        return 'weather-mist';
-      default:
-        return 'weather-clear';
-    }
-  };
-
-  // Get weather icon based on condition
-  const getWeatherIcon = (): "sun" | "moon" | "cloud" | "cloud-sun" | "cloud-moon" | "cloud-rain" | "cloud-snow" | "cloud-fog" | "cloud-lightning" => {
-    if (!weatherData) return 'sun';
-    
-    const { main, icon } = weatherData;
-    const isNight = icon.includes('n');
-    
-    switch (main.toLowerCase()) {
-      case 'clear':
-        return isNight ? 'moon' : 'sun';
-      case 'clouds':
-        return isNight ? 'cloud-moon' : 'cloud-sun';
-      case 'rain':
-      case 'drizzle':
-        return 'cloud-rain';
-      case 'thunderstorm':
-        return 'cloud-lightning';
-      case 'snow':
-        return 'cloud-snow';
-      case 'mist':
-      case 'fog':
-      case 'haze':
-        return 'cloud-fog';
-      default:
-        return isNight ? 'moon' : 'sun';
-    }
-  };
 
   return {
     weatherData,
