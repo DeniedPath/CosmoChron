@@ -1,6 +1,10 @@
 # CosmoChron
 
-An Ai powered celestial-themed Focus Timer that helps users manage their time effectively through immersive space backgrounds, achievement systems, productivity tracking, and interactive features.
+CosmoChron is an AI-powered celestial-themed Focus Timer that helps users manage their time effectively through immersive space backgrounds, achievement systems, productivity tracking, and interactive features.
+
+<p align="center">
+  <img src="public/assets/images/cosmochron-logo.png" alt="CosmoChron Logo" width="200" />
+</p>
 
 ## 🚀 Features
 
@@ -27,6 +31,9 @@ An Ai powered celestial-themed Focus Timer that helps users manage their time ef
 * [Project Structure](#project-structure)
 * [Research Findings](#research-findings)
 * [Future Enhancements](#future-enhancements)
+* [About CosmoChron](#about-cosmochron)
+* [License](#license)
+* [Acknowledgements](#acknowledgements)
 
 ## 🔧 Installation
 
@@ -79,11 +86,13 @@ http://localhost:3000
 2. **Explore Patterns**: Analyze your productivity by day and time
 3. **Session History**: Review your recent focus sessions
 4. **Filter Data**: View analytics for the past week, month, or year
+5. **Productivity Score**: Track your overall productivity with our scoring system
+6. **Export Reports**: Download your analytics data in PDF or CSV format
 
-### Missions (achivements)
+### Missions (achievements)
 1. **Unlock Milestones**: Complete sessions to unlock various achievements
 2. **Track Progress**: View your achievement collection and completion status
-3. **Discover Secrets**: Find hidden achievements through special interactions (coming soon)
+3. **Discover Secrets**: Find hidden achievements through special interactions
 
 ### Settings
 1. **Sound Preferences**: Toggle completion sounds on/off
@@ -157,47 +166,112 @@ src/
 │   ├── timer/
 │   │   ├── TimerDisplay.tsx
 │   │   ├── TimerControls.tsx
-│   │   └── TimerState.tsx
+│   │   ├── TimerState.tsx
+│   │   └── TimerSettings.tsx
 │   ├── analytics/
-│   │   ├── Dashboard.tsx
+│   │   ├── Analytics.tsx
+│   │   ├── dashboard/
+│   │   │   ├── AnalyticsDashboard.tsx
+│   │   │   ├── ProductivityScore.tsx
+│   │   │   ├── DateRangeSelector.tsx
+│   │   │   ├── DailyFocusChart.tsx
+│   │   │   ├── WeeklyTrendChart.tsx
+│   │   │   ├── MonthlyAnalysisChart.tsx
+│   │   │   ├── YearlyComparisonChart.tsx
+│   │   │   └── ReportGenerator.tsx
 │   │   ├── ProgressIndicator.tsx
 │   │   ├── SessionStats.tsx
 │   │   └── StreakCounter.tsx
 │   ├── settings/
 │   │   ├── SettingsPanel.tsx
 │   │   ├── SettingsButton.tsx
-│   │   └── ThemeSelector.tsx
+│   │   ├── ThemeSelector.tsx
+│   │   └── NotificationSettings.tsx
 │   ├── achievements/
 │   │   ├── AchievementsPanel.tsx
 │   │   ├── AchievementButton.tsx
+│   │   ├── AchievementCard.tsx
+│   │   ├── MissionTracker.tsx
 │   │   └── AchievementContext.tsx
 │   ├── features/
 │   │   ├── BreathingGuidance.tsx
 │   │   ├── CelestialEvents.tsx
-│   │   └── SpaceFacts.tsx
+│   │   ├── SpaceFacts.tsx
+│   │   └── VoiceCommands.tsx
 │   ├── feedback/
 │   │   ├── NotificationSystem.tsx
-│   │   └── ToastManager.tsx
-│   ├── backgrounds/
-│   │   ├── Particles/
-│   │   └── SolarSystem/
+│   │   ├── ToastManager.tsx
+│   │   └── SoundEffects.tsx
+│   ├── space/
+│   │   ├── SpaceBackground.tsx
+│   │   ├── SpaceParticles.tsx
+│   │   ├── PlanetarySystem.tsx
+│   │   ├── SpaceStation.tsx
+│   │   └── CelestialBodies/
+│   │       ├── Planet.tsx
+│   │       ├── Star.tsx
+│   │       ├── Comet.tsx
+│   │       └── Asteroid.tsx
+│   ├── ui/
+│   │   ├── Button.tsx
+│   │   ├── Card.tsx
+│   │   ├── Dialog.tsx
+│   │   ├── Dropdown.tsx
+│   │   └── Tabs.tsx
 │   └── context/
 │       ├── SettingsContext.tsx
-│       └── TimerContext.tsx
+│       ├── TimerContext.tsx
+│       ├── ThemeContext.tsx
+│       └── UserContext.tsx
 ├── hooks/
 │   ├── useTimer.ts
 │   ├── useAnalytics.ts
 │   ├── useNotifications.ts
 │   ├── useAchievementTracker.ts
-│   └── useBreathingGuidance.ts
+│   ├── useBreathingGuidance.ts
+│   ├── useLocalStorage.ts
+│   ├── useSpaceBackground.ts
+│   └── useWeather.ts
+├── utils/
+│   ├── timerUtils.ts
+│   ├── analytics/
+│   │   ├── dataProcessing.ts
+│   │   ├── reportGeneration.ts
+│   │   └── productivityCalculations.ts
+│   ├── achievements/
+│   │   └── missionSystem.ts
+│   └── helpers/
+│       ├── dateUtils.ts
+│       ├── formatters.ts
+│       └── validators.ts
 ├── lib/
-│   └── utils.ts
+│   ├── utils.ts
+│   ├── constants.ts
+│   └── api.ts
 ├── styles/
-│   └── globals.css
-└── pages/
-    ├── _app.tsx
-    ├── index.tsx
-    └── analytics.tsx
+│   ├── globals.css
+│   └── animations.css
+├── pages/
+│   ├── _app.tsx
+│   ├── index.tsx
+│   ├── analytics.tsx
+│   ├── achievements.tsx
+│   ├── settings.tsx
+│   └── api/
+│       ├── weather.ts
+│       └── space-facts.ts
+└── public/
+    ├── assets/
+    │   ├── images/
+    │   │   ├── planets/
+    │   │   ├── stars/
+    │   │   ├── achievements/
+    │   │   └── cosmochron-logo.png
+    │   ├── sounds/
+    │   │   ├── notifications/
+    │   │   └── ambient/
+    │   └── fonts/
+    └── favicon.ico
 ```
 
 ## 🔍 Research Findings
@@ -240,6 +314,24 @@ Based on our constraints analysis and user feedback, future versions may include
 * Expanded mission system with rewards
 * Community challenges and group goals
 
+## 🌟 About CosmoChron
+
+CosmoChron was created to transform the way people approach focused work. By combining the science of productivity with the wonder of space exploration, we've designed a tool that makes time management both effective and enjoyable.
+
+Our mission is to help users develop better focus habits while providing a momentary escape into the cosmos during their productivity sessions.
+
+## 📄 License
+
+CosmoChron is licensed under the MIT License - see the LICENSE file for details.
+
+## 🙏 Acknowledgements
+
+* Space imagery courtesy of NASA
+* Planet facts from various astronomy resources
+* Special thanks to all our beta testers who provided valuable feedback
+
 ---
 
-Built with ❤️ and 🚀 by DeniedPath
+<p align="center">
+  <i>Focus among the stars with CosmoChron</i>
+</p>
