@@ -17,13 +17,14 @@ import IntroAnimation from '@/components/IntroAnimation';
 const Index = () => {
   const [showIntro, setShowIntro] = useState(true);
   const [cosmicPoints, setCosmicPoints] = useState(0);
-  const [enhancedStars, setEnhancedStars] = useState(true);
+  const [enhancedStars] = useState(true);
+  const [shootingStarBrightness, setShootingStarBrightness] = useState(0.75); // Default brightness
   
   // Use a more stable default value for weather class
   const [weatherClass, setWeatherClass] = useState('weather-clear');
   
   // Initialize the weather hook with proper error handling
-  const { getWeatherConditionClass, error: weatherError } = useWeather({
+  const { getWeatherConditionClass } = useWeather({
     autoFetch: true
   });
   
@@ -62,6 +63,19 @@ const Index = () => {
     };
   }, []);
 
+  // Load brightness setting from localStorage
+  useEffect(() => {
+    try {
+      const savedBrightness = localStorage.getItem('shootingStarBrightness');
+      if (savedBrightness) {
+        // Convert the saved value (0-100) to a decimal (0-1)
+        setShootingStarBrightness(parseInt(savedBrightness) / 100);
+      }
+    } catch (e) {
+      console.error("Error loading brightness setting:", e);
+    }
+  }, []);
+
   // Safely get focus minutes and rank data
   let totalFocusMinutes = 0;
   let level = 1;
@@ -78,17 +92,18 @@ const Index = () => {
   }
   
   return (
-    <div className="h-screen w-screen overflow-hidden">
+    <div className="h-screen w-screen overflow-auto">
       <SpaceBackground 
         weatherCondition={weatherClass} 
         enhancedStars={enhancedStars}
+        shootingStarBrightness={shootingStarBrightness}
       >
         <IntroAnimation show={showIntro} />
         
         <div className="min-h-screen px-4 py-8 max-w-4xl mx-auto relative z-10">
           <Header cosmicPoints={cosmicPoints} />
           
-          <main className="space-y-8">
+          <main className="space-y-8 pb-20">
             <Tabs defaultValue="timer" className="w-full">
               <TabsNavigation />
               <TabContent 

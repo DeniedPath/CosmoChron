@@ -1,8 +1,11 @@
-import { useState, useEffect } from 'react';
+"use client";
+
+import { useState, useEffect, useCallback } from 'react';
 import { 
   fetchWeatherByCoords, 
   fetchWeatherByCity,
-  WeatherData 
+  WeatherData,
+  DEFAULT_WEATHER
 } from '@/services/weatherService';
 import { toast } from "@/components/ui/use-toast";
 
@@ -19,10 +22,31 @@ export const useWeather = ({ city, autoFetch = true }: UseWeatherProps = {}) => 
   const [error, setError] = useState<string | null>(null);
   const [temperatureUnit, setTemperatureUnit] = useState<TemperatureUnit>(() => {
     // Check if user has a saved preference
+    if (typeof window !== 'undefined') {
+      const savedUnit = localStorage.getItem('spaceTimer_tempUnit');
+      return (savedUnit === 'fahrenheit') ? 'fahrenheit' : 'celsius';
+    }
+    return 'celsius';
   });
 
+  // Load default weather (either from localStorage or a default value)
+  const fetchDefaultWeather = useCallback(async () => {
+    const savedWeather = localStorage.getItem('spaceTimer_weather');
+    
+    if (savedWeather) {
+      try {
+        setWeatherData(JSON.parse(savedWeather));
+      } catch (err) {
+        console.error("Error parsing saved weather:", err);
+        setWeatherData(DEFAULT_WEATHER);
+      }
+    } else {
+      setWeatherData(DEFAULT_WEATHER);
+    }
+  }, []);
+
   // Get user location and fetch weather
-  const fetchWeatherByLocation = async () => {
+  const fetchWeatherByLocation = useCallback(async () => {
     setLoading(true);
     setError(null);
     
@@ -30,17 +54,24 @@ export const useWeather = ({ city, autoFetch = true }: UseWeatherProps = {}) => 
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           async (position) => {
-            const { latitude, longitude } = position.coords;
-            const data = await fetchWeatherByCoords(latitude, longitude);
-            setWeatherData(data);
-            // Save to localStorage to persist between sessions
-            localStorage.setItem('spaceTimer_weather', JSON.stringify(data));
-            setLoading(false);
-            toast({
-              title: "Weather Updated",
-              description: `Showing weather for ${data.location}`,
-              duration: 3000,
-            });
+            try {
+              const { latitude, longitude } = position.coords;
+              const data = await fetchWeatherByCoords(latitude, longitude);
+              setWeatherData(data);
+              // Save to localStorage to persist between sessions
+              localStorage.setItem('spaceTimer_weather', JSON.stringify(data));
+              setLoading(false);
+              toast({
+                title: "Weather Updated",
+                description: `Showing weather for ${data.location}`,
+                duration: 3000,
+              });
+            } catch (err) {
+              console.error("Weather API error:", err);
+              setError("Couldn't fetch weather data. Using default cosmic weather.");
+              fetchDefaultWeather();
+              setLoading(false);
+            }
           },
           (err) => {
             console.error("Geolocation error:", err);
@@ -72,26 +103,32 @@ export const useWeather = ({ city, autoFetch = true }: UseWeatherProps = {}) => 
       fetchDefaultWeather();
       setLoading(false);
     }
-  };
+  }, [fetchDefaultWeather]);
 
-  // Load default weather (either from localStorage or a default value)
-  const fetchDefaultWeather = async () => {
-    const savedWeather = localStorage.getItem('spaceTimer_weather');
+  // Fetch weather for a specific city
+  const fetchWeatherForCity = useCallback(async (cityName: string) => {
+    setLoading(true);
+    setError(null);
     
-    if (savedWeather) {
-      try {
-        setWeatherData(JSON.parse(savedWeather));
-      } catch (err) {
-        console.error("Error parsing saved weather:", err);
-        const data = await fetchWeatherByCity("Cosmic Space");
-        setWeatherData(data);
-      }
-    } else {
-      const data = await fetchWeatherByCity("Cosmic Space");
+    try {
+      const data = await fetchWeatherByCity(cityName);
       setWeatherData(data);
+      // Save to localStorage to persist between sessions
+      localStorage.setItem('spaceTimer_weather', JSON.stringify(data));
+      setLoading(false);
+      toast({
+        title: "Weather Updated",
+        description: `Showing weather for ${data.location}`,
+        duration: 3000,
+      });
+    } catch (err) {
+      console.error("Weather API error:", err);
+      setError("Couldn't fetch weather data. Using default cosmic weather.");
+      fetchDefaultWeather();
+      setLoading(false);
     }
-  };
-  
+  }, [fetchDefaultWeather]);
+
   // Temperature unit conversion utilities
   const toggleTemperatureUnit = () => {
     const newUnit = temperatureUnit === 'celsius' ? 'fahrenheit' : 'celsius';
@@ -115,18 +152,37 @@ export const useWeather = ({ city, autoFetch = true }: UseWeatherProps = {}) => 
   
   // Initial fetch on mount
   useEffect(() => {
-    if (!autoFetch) return;
+    if (!autoFetch || typeof window === 'undefined') return;
     
-    // Always try to get user location on initial load
-    fetchWeatherByLocation();
+    // Try to load from localStorage first
+    const savedWeather = localStorage.getItem('spaceTimer_weather');
+    if (savedWeather) {
+      try {
+        setWeatherData(JSON.parse(savedWeather));
+      } catch (err) {
+        console.error("Error parsing saved weather:", err);
+      }
+    }
+    
+    // If a city is specified, fetch for that city
+    if (city) {
+      fetchWeatherForCity(city);
+    } else {
+      // Otherwise try to get user location
+      fetchWeatherByLocation();
+    }
     
     // Refresh weather data every 30 minutes
     const intervalId = setInterval(() => {
-      fetchWeatherByLocation();
+      if (city) {
+        fetchWeatherForCity(city);
+      } else {
+        fetchWeatherByLocation();
+      }
     }, 30 * 60 * 1000);
     
     return () => clearInterval(intervalId);
-  }, [autoFetch]);
+  }, [autoFetch, city, fetchWeatherForCity, fetchWeatherByLocation]);
 
   // Get weather condition class for styling
   const getWeatherConditionClass = () => {
@@ -189,6 +245,7 @@ export const useWeather = ({ city, autoFetch = true }: UseWeatherProps = {}) => 
     error,
     temperatureUnit,
     fetchWeatherByLocation,
+    fetchWeatherForCity,
     getWeatherConditionClass,
     getWeatherIcon,
     toggleTemperatureUnit,

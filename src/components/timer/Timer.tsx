@@ -1,178 +1,106 @@
+"use client";
+
 import React, { useState, useEffect } from 'react';
-import useTimer from '@/hooks/useTimer';
+import { useGlobalTimer } from '@/contexts/TimerContext';
 import TimerControls from './TimerControls';
 import BreathingGuide from '../features/BreathingGuide';
 import Notepad from '../features/Notepad';
-import { formatTime, getRandomSpaceFact } from '@/utils/timerUtils';
-import { updateSessionMissions, completeBreathingGuideMission, resetDailyMissions, resetWeeklyMissions } from '@/utils/missionUtils';
+import { getRandomSpaceFact } from '@/utils/timerUtils';
+import { completeBreathingGuideMission } from '@/utils/missionUtils';
 import { toast } from '@/hooks/use-toast';
 import { Button } from '../ui/button';
-import { ArrowRight, Stars } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 const Timer = () => {
   const [spaceFact, setSpaceFact] = useState<string>('');
   const [showBreathingGuide, setShowBreathingGuide] = useState(false);
-  const [particleType, setParticleType] = useState<'stars' | 'cosmic' | 'meteor'>('stars');
+  const [isClient, setIsClient] = useState(false);
   
-  // Initialize timer
+  // Use global timer context
   const { 
     formattedTime, 
     state, 
     progress,
     actions: { start, pause, reset, skip, setCustomTime }
-  } = useTimer({
-    initialTime: 25 * 60,
-    onComplete: () => {
-      // Show success notification
-      toast({
-        title: "Focus Session Completed!",
-        description: "Great job! Take a short break before your next session.",
-        duration: 5000,
-      });
-      
-      // Show a space fact
-      setSpaceFact(getRandomSpaceFact());
-      
-      // Update missions
-      updateSessionMissions(25, true);
-    }
-  });
+  } = useGlobalTimer();
+  
+  // Set isClient to true when component mounts on client
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
   
   // Size calculations for timer display
   const circumference = 2 * Math.PI * 120; // 120 is the radius
-  const strokeDashoffset = circumference - (progress / 100) * circumference;
+  // Only calculate strokeDashoffset on the client side
+  const strokeDashoffset = isClient ? circumference - (progress / 100) * circumference : circumference;
   
   // Handle timer completion
   useEffect(() => {
-    if (state === 'completed') {
-      // Play sound or trigger other effects
-      const audio = new Audio('/completion-sound.mp3');
-      audio.volume = 0.3;
-      audio.play().catch(() => {
-        // Handle browsers that block autoplay
-        console.log('Audio autoplay was prevented');
-      });
+    if (state === 'completed' && isClient) {
+      // Show a space fact
+      setSpaceFact(getRandomSpaceFact());
     }
-  }, [state]);
+  }, [state, isClient]);
   
-  // Reset daily/weekly missions when needed
-  useEffect(() => {
-    resetDailyMissions();
-    resetWeeklyMissions();
-  }, []);
+  // Handle breathing guide completion
+  const handleBreathingComplete = () => {
+    setShowBreathingGuide(false);
+    completeBreathingGuideMission();
+    toast({
+      title: "Breathing Exercise Completed",
+      description: "Great job! You've completed the breathing exercise.",
+      duration: 3000,
+    });
+  };
   
   // Toggle breathing guide
   const toggleBreathingGuide = () => {
-    const newState = !showBreathingGuide;
-    setShowBreathingGuide(newState);
-    
-    // Track mission progress if breathing guide is used
-    if (newState) {
-      completeBreathingGuideMission();
-    }
-  };
-  
-  // Change particle effect
-  const cycleParticleEffect = () => {
-    if (particleType === 'stars') setParticleType('cosmic');
-    else if (particleType === 'cosmic') setParticleType('meteor');
-    else setParticleType('stars');
+    setShowBreathingGuide(!showBreathingGuide);
   };
   
   return (
-    <div className="relative flex flex-col items-center justify-center space-y-8 pt-6 pb-8">
-      {/* Visual Controls */}
-      <div className="absolute top-0 right-4 flex space-x-2">
-        <Button
-          onClick={toggleBreathingGuide}
-          variant="ghost"
-          size="icon"
-          className="h-8 w-8 rounded-full bg-cosmic-blue/20 hover:bg-cosmic-blue/30 text-cosmic-white/70"
-        >
-          <ArrowRight className="h-4 w-4" />
-        </Button>
-        
-        <Button
-          onClick={cycleParticleEffect}
-          variant="ghost"
-          size="icon"
-          className="h-8 w-8 rounded-full bg-cosmic-blue/20 hover:bg-cosmic-blue/30 text-cosmic-white/70"
-        >
-          <Stars className="h-4 w-4" />
-        </Button>
-        
-        <Notepad />
-      </div>
-      
+    <div className="flex flex-col items-center max-w-full overflow-x-hidden">
       {/* Timer Display */}
-      <div className="relative flex items-center justify-center w-72 h-72">
-        {/* Background circle */}
-        <svg className="absolute" width="280" height="280" viewBox="0 0 280 280">
+      <div className="relative w-64 h-64 md:w-72 md:h-72 flex items-center justify-center mb-6">
+        <svg className="w-full h-full -rotate-90" viewBox="0 0 300 300">
+          {/* Background circle */}
           <circle
-            cx="140"
-            cy="140"
+            cx="150"
+            cy="150"
             r="120"
             fill="none"
-            strokeWidth="4"
             stroke="rgba(255, 255, 255, 0.1)"
-            strokeLinecap="round"
+            strokeWidth="15"
           />
-        </svg>
-        
-        {/* Progress circle */}
-        <svg className="absolute" width="280" height="280" viewBox="0 0 280 280">
-          <circle
-            className="timer-ring"
-            cx="140"
-            cy="140"
-            r="120"
-            fill="none"
-            strokeWidth="4"
-            stroke="url(#progressGradient)"
-            strokeDasharray={circumference}
-            strokeDashoffset={strokeDashoffset}
-            strokeLinecap="round"
-          />
-          <defs>
-            <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#9277FF" />
-              <stop offset="100%" stopColor="#6E56CF" />
-            </linearGradient>
-          </defs>
-        </svg>
-        
-        {/* Timer display or breathing guide */}
-        {showBreathingGuide ? (
-          <div className="z-10">
-            <BreathingGuide 
-              active={state === 'running'} 
-              onComplete={() => setShowBreathingGuide(false)}
+          {/* Progress circle - only render with actual progress on client side */}
+          {isClient && (
+            <circle
+              cx="150"
+              cy="150"
+              r="120"
+              fill="none"
+              stroke="rgba(138, 180, 248, 0.8)"
+              strokeWidth="15"
+              strokeDasharray={circumference}
+              strokeDashoffset={strokeDashoffset}
+              strokeLinecap="round"
+              className="transition-all duration-1000 ease-linear"
             />
-          </div>
-        ) : (
-          <div className="text-center z-10">
-            <h1 className="text-6xl font-bold text-cosmic-white tracking-tight">
-              {formattedTime}
-            </h1>
-            <p className="text-cosmic-white/60 text-sm mt-2">
-              {state === 'idle' && 'Ready to focus'}
-              {state === 'running' && 'Focus in progress'}
-              {state === 'paused' && 'Paused'}
-              {state === 'completed' && 'Session Complete!'}
-            </p>
-          </div>
-        )}
-      </div>
-      
-      {/* Space Fact (shown on completion) */}
-      {state === 'completed' && spaceFact && (
-        <div className="cosmic-blur p-4 rounded-xl max-w-md animate-fade-in text-center">
-          <p className="text-sm text-cosmic-white/80 italic">"{spaceFact}"</p>
+          )}
+        </svg>
+        <div className="absolute inset-0 flex flex-col items-center justify-center">
+          <span className="text-4xl md:text-5xl font-bold text-cosmic-white mb-2">{formattedTime}</span>
+          <span className="text-sm text-cosmic-white/70 uppercase tracking-wider">
+            {state === 'idle' && 'Ready'}
+            {state === 'running' && 'Focusing'}
+            {state === 'paused' && 'Paused'}
+            {state === 'completed' && 'Completed'}
+          </span>
         </div>
-      )}
+      </div>
       
       {/* Timer Controls */}
-      <TimerControls
+      <TimerControls 
         state={state}
         onStart={start}
         onPause={pause}
@@ -180,6 +108,42 @@ const Timer = () => {
         onSkip={skip}
         onTimeChange={setCustomTime}
       />
+      
+      {/* Space Fact (shown after completion) */}
+      {spaceFact && state === 'completed' && isClient && (
+        <div className="bg-cosmic-blue/30 border border-cosmic-highlight/30 rounded-lg p-4 max-w-md mb-6 animate-fadeIn">
+          <h3 className="text-cosmic-highlight font-medium mb-2">Space Fact</h3>
+          <p className="text-cosmic-white/90">{spaceFact}</p>
+        </div>
+      )}
+      
+      {/* Features Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full max-w-4xl mt-4 px-2">
+        {/* Breathing Guide */}
+        <div className="bg-cosmic-blue/20 border border-cosmic-highlight/20 rounded-lg p-4">
+          <h3 className="text-lg font-medium text-cosmic-white mb-3">Breathing Guide</h3>
+          <p className="text-cosmic-white/70 mb-4">Take a moment to breathe and center yourself before or after a focus session.</p>
+          
+          {showBreathingGuide && isClient ? (
+            <BreathingGuide active={true} onComplete={handleBreathingComplete} />
+          ) : (
+            <Button 
+              className="w-full bg-cosmic-purple/60 hover:bg-cosmic-purple/80"
+              onClick={toggleBreathingGuide}
+            >
+              <ArrowRight className="mr-2 h-4 w-4" />
+              Start Breathing Exercise
+            </Button>
+          )}
+        </div>
+        
+        {/* Notepad */}
+        <div className="bg-cosmic-blue/20 border border-cosmic-highlight/20 rounded-lg p-4">
+          <h3 className="text-lg font-medium text-cosmic-white mb-3">Session Notes</h3>
+          <p className="text-cosmic-white/70 mb-4">Jot down your thoughts or tasks for this focus session.</p>
+          <Notepad />
+        </div>
+      </div>
     </div>
   );
 };

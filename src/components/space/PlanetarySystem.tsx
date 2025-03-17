@@ -1,4 +1,6 @@
-import React from 'react';
+"use client";
+
+import React, { useState, useEffect } from 'react';
 
 interface PlanetarySystemProps {
   position?: {
@@ -14,6 +16,12 @@ const PlanetarySystem: React.FC<PlanetarySystemProps> = ({
   position = { top: '30%', right: '10%' },
   scale = 1 
 }) => {
+  const [isClient, setIsClient] = useState(false);
+  
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+  
   // Calculate different orbit sizes
   const orbitSizes = [
     150 * scale, // First orbit
@@ -53,6 +61,11 @@ const PlanetarySystem: React.FC<PlanetarySystemProps> = ({
       shadow: '0 0 10px 3px rgba(250, 200, 50, 0.6)'
     }
   ];
+  
+  // Return a simple placeholder during server-side rendering
+  if (!isClient) {
+    return <div className="absolute pointer-events-none z-0"></div>;
+  }
   
   return (
     <div 

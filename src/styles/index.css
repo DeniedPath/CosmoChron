@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -185,7 +184,53 @@
       opacity: 0;
     }
   }
-}
+
+  /* Global layout fixes */
+  html, body {
+    overflow-x: hidden;
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  body {
+    min-height: 100vh;
+    /* mobile viewport bug fix */
+    min-height: -webkit-fill-available;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+  }
+
+  html {
+    height: -webkit-fill-available;
+  }
+
+  /* Ensure content is always scrollable when needed */
+  .content-container {
+    max-width: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Ensure floating elements don't overlap important content */
+  .floating-element {
+    z-index: 50;
+    pointer-events: auto;
+  }
+
+  /* Add padding to the bottom of pages to account for the floating timer */
+  .page-container {
+    padding-bottom: calc(4rem + env(safe-area-inset-bottom, 1rem));
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 640px) {
+    .responsive-container {
+      padding-left: 0.75rem;
+      padding-right: 0.75rem;
+    }
+  }
 
   @keyframes twinkle {
     0%, 100% {
@@ -265,7 +310,7 @@
       box-shadow: 0 0 30px 15px rgba(138, 43, 226, 0.8), 0 0 60px 30px rgba(138, 43, 226, 0.4);
     }
   }
-@keyframes twinkle {
+  @keyframes twinkle {
     0%, 100% {
       opacity: 0.6;
     }
@@ -362,3 +407,4 @@
       box-shadow: 0 0 20px 4px rgba(255, 255, 255, 0.9);
     }
   }
+}

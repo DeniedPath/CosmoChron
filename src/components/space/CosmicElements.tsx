@@ -1,6 +1,19 @@
-import React from 'react';
+"use client";
+
+import React, { useState, useEffect } from 'react';
 
 const CosmicElements: React.FC = () => {
+  const [isClient, setIsClient] = useState(false);
+  
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+  
+  // Return a simple placeholder during server-side rendering
+  if (!isClient) {
+    return <div className="absolute inset-0"></div>;
+  }
+  
   return (
     <>
       {/* Enhanced animated overlay */}

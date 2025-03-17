@@ -1,25 +1,33 @@
-import React, { useEffect, useRef } from 'react';
+"use client";
+
+import React, { useEffect, useRef, useState } from 'react';
 
 interface SpaceParticlesProps {
   active?: boolean;
   intensity?: 'low' | 'medium' | 'high';
   particleType?: 'stars' | 'cosmic' | 'meteor' | 'stardust';
+  brightness?: 'dim' | 'normal' | 'bright'; 
 }
 
 const SpaceParticles: React.FC<SpaceParticlesProps> = ({ 
   active = true, 
   intensity = 'medium',
-  particleType = 'stars'
+  particleType = 'stars',
+  brightness = 'normal' 
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [isClient, setIsClient] = useState(false);
   
   useEffect(() => {
-    if (!active || !containerRef.current) return;
+    setIsClient(true);
+  }, []);
+  
+  useEffect(() => {
+    if (!active || !containerRef.current || !isClient) return;
     
     const container = containerRef.current;
     
-    // Determine particle count based on intensity
-    let particleCount = 100; // default medium
+    let particleCount = 100; 
     switch(intensity) {
       case 'low':
         particleCount = 70;
@@ -32,35 +40,30 @@ const SpaceParticles: React.FC<SpaceParticlesProps> = ({
         break;
     }
     
-    // Create particles
     const particles: HTMLDivElement[] = [];
     
     for (let i = 0; i < particleCount; i++) {
       const particle = document.createElement('div');
       
-      // Different particle appearances based on type
       if (particleType === 'stars') {
         particle.className = 'absolute rounded-full bg-white animate-pulse-subtle';
         
-        // Larger size and increased opacity for stars
         const size = Math.random() * 5 + 2.5;
         const opacity = Math.random() * 0.5 + 0.5;
         particle.style.width = `${size}px`;
         particle.style.height = `${size}px`;
         particle.style.opacity = opacity.toString();
         
-        // Add stronger glow effect to stars
         if (Math.random() > 0.3) {
           particle.style.boxShadow = `0 0 ${Math.random() * 10 + 5}px ${Math.random() * 5 + 3}px rgba(255, 255, 255, 0.95)`;
         }
         
-        // Add colored stars occasionally
         if (Math.random() > 0.85) {
           const colors = [
-            'rgba(255, 223, 186, 0.98)', // Yellow/white
-            'rgba(203, 249, 255, 0.98)', // Blue
-            'rgba(255, 180, 180, 0.98)', // Red
-            'rgba(255, 210, 161, 0.98)', // Orange
+            'rgba(255, 223, 186, 0.98)', 
+            'rgba(203, 249, 255, 0.98)', 
+            'rgba(255, 180, 180, 0.98)', 
+            'rgba(255, 210, 161, 0.98)', 
           ];
           const randomColor = colors[Math.floor(Math.random() * colors.length)];
           particle.style.backgroundColor = randomColor;
@@ -70,14 +73,12 @@ const SpaceParticles: React.FC<SpaceParticlesProps> = ({
       else if (particleType === 'cosmic') {
         particle.className = 'absolute rounded-full animate-pulse-subtle';
         
-        // Larger cosmic particles with higher opacity
         const size = Math.random() * 12 + 6;
         const opacity = Math.random() * 0.7 + 0.5;
         particle.style.width = `${size}px`;
         particle.style.height = `${size}px`;
         particle.style.opacity = opacity.toString();
         
-        // Random cosmic particle colors
         const cosmicColors = [
           'bg-gradient-to-br from-purple-300 to-blue-300',
           'bg-gradient-to-br from-blue-300 to-teal-300',
@@ -87,22 +88,41 @@ const SpaceParticles: React.FC<SpaceParticlesProps> = ({
         const randomColorClass = cosmicColors[Math.floor(Math.random() * cosmicColors.length)];
         particle.classList.add(...randomColorClass.split(' '));
         
-        // Enhanced glow
         particle.style.boxShadow = `0 0 ${Math.random() * 12 + 8}px ${Math.random() * 8 + 4}px rgba(147, 112, 219, 0.8)`;
       }
       else if (particleType === 'meteor') {
-        // Brighter meteor particles
-        particle.className = 'absolute bg-white/95 animate-meteor';
+        let opacity = 0.6; 
+        let glowIntensity = 0.5; 
         
-        const width = Math.random() * 150 + 100;
-        const height = Math.random() * 5 + 2;
+        switch(brightness) {
+          case 'dim':
+            opacity = 0.3;
+            glowIntensity = 0.2;
+            if (Math.random() > 0.6) continue; 
+            break;
+          case 'normal':
+            opacity = 0.6;
+            glowIntensity = 0.5;
+            break;
+          case 'bright':
+            opacity = 0.95;
+            glowIntensity = 0.8;
+            break;
+        }
+        
+        particle.className = 'absolute bg-white animate-meteor';
+        
+        const width = Math.random() * 120 + 80;
+        const height = Math.random() * 3 + 1; 
+        
         particle.style.width = `${width}px`;
         particle.style.height = `${height}px`;
+        particle.style.opacity = opacity.toString();
         particle.style.transform = `rotate(${Math.random() * 45}deg)`;
-        particle.style.boxShadow = '0 0 20px 8px rgba(255, 255, 255, 0.95)';
+        
+        particle.style.boxShadow = `0 0 10px 4px rgba(255, 255, 255, ${glowIntensity})`;
       }
       else if (particleType === 'stardust') {
-        // Small floating dust particles
         particle.className = 'absolute rounded-full';
         
         const size = Math.random() * 3 + 1;
@@ -112,43 +132,35 @@ const SpaceParticles: React.FC<SpaceParticlesProps> = ({
         particle.style.opacity = opacity.toString();
         particle.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
         
-        // Very subtle glow
         if (Math.random() > 0.7) {
           particle.style.boxShadow = `0 0 ${Math.random() * 3 + 1}px rgba(255, 255, 255, 0.5)`;
         }
       }
       
-      // Random positions
       particle.style.left = `${Math.random() * 100}%`;
       particle.style.top = `${Math.random() * 100}%`;
       
-      // Random animation duration
       const duration = Math.random() * 15 + 10;
       
       if (particleType === 'meteor') {
-        // Meteors have special animation
         particle.style.animation = `meteor ${duration}s linear infinite`;
         particle.style.animationDelay = `${Math.random() * 15}s`;
       } else if (particleType === 'stardust') {
-        // Stardust floats slowly
         particle.style.animation = `float ${duration * 2}s infinite`;
         particle.style.animationDelay = `${Math.random() * 10}s`;
       } else {
-        // Add twinkle and float animations for stars and cosmic particles
         particle.style.animation = `pulse-subtle ${duration}s infinite, float ${duration * 1.5}s infinite`;
         particle.style.animationDelay = `${Math.random() * 5}s`;
       }
       
-      // Add to container
       container.appendChild(particle);
       particles.push(particle);
     }
     
-    // Cleanup
     return () => {
       particles.forEach(particle => particle.remove());
     };
-  }, [active, intensity, particleType]);
+  }, [active, intensity, particleType, brightness, isClient]);
   
   return (
     <div

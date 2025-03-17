@@ -18,15 +18,16 @@ const HelpPage: React.FC = () => {
     <SpaceBackground weatherCondition="weather-clear">
       <div className="container px-4 py-8 mx-auto max-w-3xl">
         <div className="flex items-center mb-8">
-          <Link href="/">
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="mr-2 text-cosmic-white"
-            >
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="mr-2 text-cosmic-white"
+            asChild
+          >
+            <Link href="/">
               <ChevronLeft className="h-5 w-5" />
-            </Button>
-          </Link>
+            </Link>
+          </Button>
           <h1 className="text-2xl font-bold text-cosmic-white flex items-center">
             <HelpCircle className="h-6 w-6 mr-2 text-cosmic-highlight" />
             Help & FAQ
@@ -58,7 +59,7 @@ const HelpPage: React.FC = () => {
                 <li>Start a focus session by clicking the play button.</li>
                 <li>You can pause or reset your session at any time.</li>
                 <li>Choose from preset durations (5m, 15m, 25m, 50m) or set a custom time.</li>
-                <li>When a session completes, you'll earn cosmic points and progress toward your next rank.</li>
+                <li>When a session completes, you&apos;ll earn cosmic points and progress toward your next rank.</li>
               </ul>
             </AccordionContent>
           </AccordionItem>
@@ -71,15 +72,11 @@ const HelpPage: React.FC = () => {
               </div>
             </AccordionTrigger>
             <AccordionContent className="px-6 pb-4 text-cosmic-white/80">
-              <p className="mb-2">
-                Space Timer adapts to your local weather, creating a unique cosmic experience:
-              </p>
               <ul className="list-disc pl-5 space-y-2">
-                <li>Clear weather brings bright stars and cosmic clarity</li>
-                <li>Clouds add dreamy nebula effects</li>
-                <li>Rain transforms into meteor showers</li>
-                <li>Thunderstorms create cosmic energy bursts</li>
-                <li>Snow becomes gentle floating stardust</li>
+                <li>The app integrates with real-world weather data to change the background effects.</li>
+                <li>Allow location access when prompted for the best experience.</li>
+                <li>You can toggle between Celsius and Fahrenheit in the weather tab.</li>
+                <li>Weather updates automatically every 30 minutes.</li>
               </ul>
             </AccordionContent>
           </AccordionItem>
@@ -88,56 +85,47 @@ const HelpPage: React.FC = () => {
             <AccordionTrigger className="px-6 py-4 text-cosmic-white hover:text-cosmic-white hover:no-underline">
               <div className="flex items-center">
                 <User className="h-5 w-5 mr-2 text-cosmic-highlight" />
-                <span>Ranks & Progression</span>
+                <span>Ranks & Progress</span>
               </div>
             </AccordionTrigger>
             <AccordionContent className="px-6 pb-4 text-cosmic-white/80">
-              <p className="mb-2">
-                As you focus, you'll climb through cosmic ranks:
-              </p>
-              <ol className="list-decimal pl-5 space-y-2">
-                <li>Cosmic Novice (0 minutes)</li>
-                <li>Stellar Explorer (60 minutes)</li>
-                <li>Orbit Keeper (300 minutes)</li>
-                <li>Nebula Navigator (600 minutes)</li>
-                <li>Galaxy Guardian (1,200 minutes)</li>
-                <li>Supernova Sentinel (2,400 minutes)</li>
-                <li>Celestial Sovereign (4,800 minutes)</li>
-              </ol>
+              <ul className="list-disc pl-5 space-y-2">
+                <li>Earn cosmic points by completing focus sessions.</li>
+                <li>Progress through space ranks from Cadet to Cosmic Admiral.</li>
+                <li>Each rank unlocks new features and space station modules.</li>
+                <li>View your progress in the Rank tab.</li>
+              </ul>
             </AccordionContent>
           </AccordionItem>
 
-          <AccordionItem value="station" className="bg-cosmic-blue/20 border border-cosmic-highlight/20 rounded-lg overflow-hidden">
+          <AccordionItem value="missions" className="bg-cosmic-blue/20 border border-cosmic-highlight/20 rounded-lg overflow-hidden">
             <AccordionTrigger className="px-6 py-4 text-cosmic-white hover:text-cosmic-white hover:no-underline">
               <div className="flex items-center">
                 <Rocket className="h-5 w-5 mr-2 text-cosmic-highlight" />
-                <span>Space Station</span>
+                <span>Missions</span>
               </div>
             </AccordionTrigger>
             <AccordionContent className="px-6 pb-4 text-cosmic-white/80">
-              <p className="mb-2">
-                Your Space Station expands as you focus more:
-              </p>
               <ul className="list-disc pl-5 space-y-2">
-                <li>Core Module (unlocked at start)</li>
-                <li>Research Lab (unlocked at 120 minutes)</li>
-                <li>Observatory (unlocked at 300 minutes)</li>
-                <li>Defense Shield (unlocked at 600 minutes)</li>
+                <li>Complete daily and weekly missions to earn bonus cosmic points.</li>
+                <li>Missions range from simple tasks to challenging focus marathons.</li>
+                <li>Track your mission progress in the Missions tab.</li>
+                <li>New missions are available daily and weekly.</li>
               </ul>
-              <p className="mt-2">
-                Visit your Space Station to see your progress and view available modules.
-              </p>
             </AccordionContent>
           </AccordionItem>
         </Accordion>
 
         <div className="mt-8 text-center">
-          <Link href="/">
-            <Button className="bg-cosmic-purple/60 hover:bg-cosmic-purple/80">
-              <Timer className="mr-2 h-4 w-4" />
+          <Button 
+            variant="default" 
+            className="bg-cosmic-purple/60 hover:bg-cosmic-purple/80"
+            asChild
+          >
+            <Link href="/">
               Return to Timer
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         </div>
       </div>
     </SpaceBackground>

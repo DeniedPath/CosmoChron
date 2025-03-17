@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { TimerState } from '@/hooks/useTimer';
 import { Play, Pause, RotateCcw, SkipForward, Timer } from 'lucide-react';
@@ -24,14 +23,31 @@ const TimerControls: React.FC<TimerControlsProps> = ({
   onTimeChange
 }) => {
   const [customMinutes, setCustomMinutes] = useState<number>(25);
+  const [isChangingTime, setIsChangingTime] = useState(false);
 
   const handleSliderChange = (value: number[]) => {
     setCustomMinutes(value[0]);
   };
 
   const applyCustomTime = () => {
-    onTimeChange(customMinutes);
+    handleTimeChange(customMinutes);
   };
+
+  // Debounced time change handler to prevent glitching
+  const handleTimeChange = useCallback((minutes: number) => {
+    if (isChangingTime) return; // Prevent multiple rapid calls
+    
+    setIsChangingTime(true);
+    
+    // Always reset the timer first, regardless of state
+    onReset();
+    
+    // Use a timeout to ensure reset completes before setting new time
+    setTimeout(() => {
+      onTimeChange(minutes);
+      setIsChangingTime(false);
+    }, 100); // Increased timeout for more reliability
+  }, [onReset, onTimeChange, isChangingTime]);
 
   return (
     <div className="flex flex-col items-center space-y-6">
@@ -77,34 +93,38 @@ const TimerControls: React.FC<TimerControlsProps> = ({
       {/* Time Presets */}
       <div className="flex flex-wrap justify-center gap-2">
         <Button
-          onClick={() => onTimeChange(5)}
+          onClick={() => handleTimeChange(5)}
           variant="ghost"
           size="sm"
           className="text-cosmic-white/70 hover:text-cosmic-white hover:bg-cosmic-purple/30"
+          disabled={isChangingTime}
         >
           5m
         </Button>
         <Button
-          onClick={() => onTimeChange(15)}
+          onClick={() => handleTimeChange(15)}
           variant="ghost"
           size="sm"
           className="text-cosmic-white/70 hover:text-cosmic-white hover:bg-cosmic-purple/30"
+          disabled={isChangingTime}
         >
           15m
         </Button>
         <Button
-          onClick={() => onTimeChange(25)}
+          onClick={() => handleTimeChange(25)}
           variant="ghost"
           size="sm"
           className="text-cosmic-white/70 hover:text-cosmic-white hover:bg-cosmic-purple/30"
+          disabled={isChangingTime}
         >
           25m
         </Button>
         <Button
-          onClick={() => onTimeChange(50)}
+          onClick={() => handleTimeChange(50)}
           variant="ghost"
           size="sm"
           className="text-cosmic-white/70 hover:text-cosmic-white hover:bg-cosmic-purple/30"
+          disabled={isChangingTime}
         >
           50m
         </Button>
@@ -115,6 +135,7 @@ const TimerControls: React.FC<TimerControlsProps> = ({
               variant="ghost"
               size="sm"
               className="text-cosmic-white/70 hover:text-cosmic-white hover:bg-cosmic-purple/30"
+              disabled={isChangingTime}
             >
               <Timer className="h-3 w-3 mr-1" />
               Custom
@@ -139,7 +160,11 @@ const TimerControls: React.FC<TimerControlsProps> = ({
                   <span className="text-sm text-cosmic-white/70">60 min</span>
                 </div>
               </div>
-              <Button onClick={applyCustomTime} className="w-full bg-cosmic-accent hover:bg-cosmic-accent/90">
+              <Button 
+                onClick={applyCustomTime} 
+                className="w-full bg-cosmic-accent hover:bg-cosmic-accent/90"
+                disabled={isChangingTime}
+              >
                 Apply
               </Button>
             </div>

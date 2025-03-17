@@ -1,6 +1,7 @@
-// src/components/weather/WeatherBackgroundStyle.tsx
+"use client";
 
-import React, { ReactNode } from 'react';
+// src/components/weather/WeatherBackgroundStyle.tsx
+import React, { ReactNode, useState, useEffect } from 'react';
 
 interface WeatherBackgroundStyleProps {
   weatherCondition: string;
@@ -11,6 +12,12 @@ const WeatherBackgroundStyle: React.FC<WeatherBackgroundStyleProps> = ({
   weatherCondition = 'weather-clear', // Provide default value
   children 
 }) => {
+  const [isClient, setIsClient] = useState(false);
+  
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+  
   // Generate CSS classes based on weather condition
   const getWeatherClassNames = () => {
     try {
@@ -48,6 +55,15 @@ const WeatherBackgroundStyle: React.FC<WeatherBackgroundStyleProps> = ({
       return "fixed inset-0 -z-10 cosmic-gradient overflow-hidden bg-gradient-to-b from-cosmic-blue via-cosmic-purple to-cosmic-dark";
     }
   };
+
+  // Use a simple background during server-side rendering
+  if (!isClient) {
+    return (
+      <div className="fixed inset-0 -z-10 cosmic-gradient overflow-hidden bg-gradient-to-b from-cosmic-blue via-cosmic-purple to-cosmic-dark">
+        {children}
+      </div>
+    );
+  }
 
   return (
     <div className={getWeatherClassNames()}>

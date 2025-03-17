@@ -45,12 +45,12 @@ const TabContent: React.FC<TabContentProps> = ({
           />
           
           <div className="text-center mt-6">
-            <Link href="/station">
-              <Button className="bg-cosmic-purple/60 hover:bg-cosmic-purple/80">
+            <Button className="bg-cosmic-purple/60 hover:bg-cosmic-purple/80" asChild>
+              <Link href="/station">
                 <Building2 className="mr-2 h-4 w-4" />
                 View Full Space Station
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           </div>
         </div>
       </TabsContent>

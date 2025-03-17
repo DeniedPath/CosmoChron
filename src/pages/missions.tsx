@@ -17,11 +17,11 @@ const SpaceStationPage = () => {
         {/* Header */}
         <header className="flex items-center justify-between mb-12">
           <div className="flex items-center space-x-4">
-            <Link href="/">
-              <Button variant="ghost" size="icon" className="rounded-full h-9 w-9 bg-cosmic-blue/20 hover:bg-cosmic-blue/30">
+            <Button variant="ghost" size="icon" className="rounded-full h-9 w-9 bg-cosmic-blue/20 hover:bg-cosmic-blue/30" asChild>
+              <Link href="/">
                 <ChevronLeft className="h-5 w-5 text-cosmic-white" />
-              </Button>
-            </Link>
+              </Link>
+            </Button>
             <h1 className="text-2xl font-bold cosmic-highlight">Space Station</h1>
           </div>
         </header>
@@ -43,18 +43,18 @@ const SpaceStationPage = () => {
               </p>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <Link href="/">
-                  <Button className="w-full bg-cosmic-purple/60 hover:bg-cosmic-purple/80">
+                <Button className="w-full bg-cosmic-purple/60 hover:bg-cosmic-purple/80" asChild>
+                  <Link href="/">
                     <Timer className="mr-2 h-4 w-4" />
                     Start Focusing
-                  </Button>
-                </Link>
-                <Link href="/missions">
-                  <Button variant="outline" className="w-full border-cosmic-highlight/40 text-cosmic-white bg-cosmic-blue/20 hover:bg-cosmic-blue/40">
+                  </Link>
+                </Button>
+                <Button variant="outline" className="w-full border-cosmic-highlight/40 text-cosmic-white bg-cosmic-blue/20 hover:bg-cosmic-blue/40" asChild>
+                  <Link href="/missions">
                     <Rocket className="mr-2 h-4 w-4" />
                     View Missions
-                  </Button>
-                </Link>
+                  </Link>
+                </Button>
               </div>
             </div>
           </div>

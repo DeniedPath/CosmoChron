@@ -1,6 +1,19 @@
-import React from 'react';
+"use client";
+
+import React, { useState, useEffect } from 'react';
 
 const StarField: React.FC = () => {
+  const [isClient, setIsClient] = useState(false);
+  
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+  
+  // Only render stars on the client side to avoid hydration mismatch
+  if (!isClient) {
+    return <div className="absolute inset-0 star-field opacity-90"></div>;
+  }
+  
   return (
     <>
       {/* Star field with increased opacity */}

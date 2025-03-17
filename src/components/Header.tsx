@@ -1,6 +1,5 @@
 import React from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { Trophy, HelpCircle, Settings, Rocket } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import WeatherDisplay from '@/components/weather/WeatherDisplay';
@@ -10,12 +9,6 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ cosmicPoints }) => {
-  const router = useRouter();
-  
-  const handleSettingsClick = () => {
-    router.push('/settings');
-  };
-  
   return (
     <header className="flex items-center justify-between mb-12">
       <div className="flex items-center space-x-3">
@@ -34,23 +27,26 @@ const Header: React.FC<HeaderProps> = ({ cosmicPoints }) => {
         </div>
         
         <div className="flex space-x-2">
-          <Link href="/help">
-            <Button 
-              variant="ghost" 
-              size="icon"
-              className="rounded-full h-9 w-9 bg-cosmic-blue/20 hover:bg-cosmic-blue/30 text-cosmic-white/70"
-            >
+          <Button 
+            variant="ghost" 
+            size="icon"
+            className="rounded-full h-9 w-9 bg-cosmic-blue/20 hover:bg-cosmic-blue/30 text-cosmic-white/70"
+            asChild
+          >
+            <Link href="/help">
               <HelpCircle className="h-5 w-5" />
-            </Button>
-          </Link>
+            </Link>
+          </Button>
           
           <Button 
             variant="ghost" 
             size="icon"
             className="rounded-full h-9 w-9 bg-cosmic-blue/20 hover:bg-cosmic-blue/30 text-cosmic-white/70"
-            onClick={handleSettingsClick}
+            asChild
           >
-            <Settings className="h-5 w-5" />
+            <Link href="/settings">
+              <Settings className="h-5 w-5" />
+            </Link>
           </Button>
         </div>
       </div>
