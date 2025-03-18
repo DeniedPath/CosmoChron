@@ -1,4 +1,3 @@
-
 import React, { useMemo } from 'react';
 import { getSessions } from '@/utils/timerUtils';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -14,32 +13,24 @@ import {
   YAxis, 
   Tooltip, 
   ResponsiveContainer, 
-  TooltipProps,
-  Legend
+  TooltipProps
 } from 'recharts';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Activity, BarChart2, Clock, PieChart as PieChartIcon, Calendar, TrendingUp } from 'lucide-react';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Activity, PieChart as PieChartIcon, TrendingUp, Download, FileJson, FileSpreadsheet } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { convertToCSV, convertToJSON, generateAnalyticsSummary, downloadFile } from '@/utils/exportUtils';
+import { Session } from '@/types/sessions';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { toast } from '@/hooks/use-toast';
 
-interface Session {
-  timestamp: string;
-  durationMinutes: number;
-  completed: boolean;
-}
-
+// Interface for chart data
 interface ChartData {
   day: string;
-  minutes: number;
-}
-
-interface PieData {
-  name: string;
-  value: number;
-  color: string;
-}
-
-interface TimeOfDayData {
-  name: string;
   minutes: number;
 }
 
@@ -56,6 +47,41 @@ const customTooltip = ({ active, payload }: TooltipProps<number, string>) => {
 
 const Analytics = () => {
   const sessions: Session[] = getSessions();
+  
+  // Handle exporting data in different formats
+  const handleExport = (format: 'csv' | 'json' | 'summary') => {
+    const timestamp = new Date().toISOString().split('T')[0];
+    
+    switch (format) {
+      case 'csv':
+        const csvData = convertToCSV(sessions);
+        downloadFile(csvData, `cosmic-focus-sessions-${timestamp}.csv`, 'text/csv');
+        toast({
+          title: "Export Successful",
+          description: "Your sessions data has been exported as CSV",
+          duration: 3000,
+        });
+        break;
+      case 'json':
+        const jsonData = convertToJSON(sessions);
+        downloadFile(jsonData, `cosmic-focus-sessions-${timestamp}.json`, 'application/json');
+        toast({
+          title: "Export Successful",
+          description: "Your sessions data has been exported as JSON",
+          duration: 3000,
+        });
+        break;
+      case 'summary':
+        const summaryData = generateAnalyticsSummary(sessions);
+        downloadFile(summaryData, `cosmic-focus-summary-${timestamp}.json`, 'application/json');
+        toast({
+          title: "Export Successful",
+          description: "Your analytics summary has been exported",
+          duration: 3000,
+        });
+        break;
+    }
+  };
   
   // Prepare data for the weekly chart
   const weeklyChartData = useMemo(() => {
@@ -232,6 +258,41 @@ const Analytics = () => {
   
   return (
     <div className="space-y-6 w-full mx-auto">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-2xl font-bold text-cosmic-white">Analytics</h2>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button className="bg-cosmic-blue/20 border border-cosmic-highlight/20 backdrop-blur-lg hover:bg-cosmic-purple/30">
+              <Download className="w-4 h-4 mr-2" />
+              Export Data
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="bg-cosmic-blue/90 backdrop-blur-lg border-cosmic-highlight/20">
+            <DropdownMenuItem 
+              className="text-cosmic-white hover:bg-cosmic-purple/30 cursor-pointer"
+              onClick={() => handleExport('csv')}
+            >
+              <FileSpreadsheet className="w-4 h-4 mr-2" />
+              Export as CSV
+            </DropdownMenuItem>
+            <DropdownMenuItem 
+              className="text-cosmic-white hover:bg-cosmic-purple/30 cursor-pointer"
+              onClick={() => handleExport('json')}
+            >
+              <FileJson className="w-4 h-4 mr-2" />
+              Export as JSON
+            </DropdownMenuItem>
+            <DropdownMenuItem 
+              className="text-cosmic-white hover:bg-cosmic-purple/30 cursor-pointer"
+              onClick={() => handleExport('summary')}
+            >
+              <PieChartIcon className="w-4 h-4 mr-2" />
+              Export Analytics Summary
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+      
       <Tabs defaultValue="overview" className="w-full">
         <TabsList className="mb-4 bg-cosmic-blue/30 backdrop-blur-md border border-cosmic-highlight/20 p-1">
           <TabsTrigger value="overview" className="data-[state=active]:bg-cosmic-purple/40 data-[state=active]:text-cosmic-white">

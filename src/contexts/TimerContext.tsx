@@ -14,6 +14,7 @@ interface TimerContextType {
   progress: number;
   totalTime: number;
   isTimerVisible: boolean;
+  isAlarmPlaying: boolean;
   actions: {
     start: () => void;
     pause: () => void;
@@ -22,6 +23,7 @@ interface TimerContextType {
     skip: () => void;
     setCustomTime: (minutes: number) => void;
     toggleTimerVisibility: () => void;
+    stopAlarm: () => void;
   };
 }
 
@@ -33,6 +35,8 @@ interface TimerProviderProps {
 
 export const TimerProvider: React.FC<TimerProviderProps> = ({ children }) => {
   const [isClient, setIsClient] = useState(false);
+  const [isAlarmPlaying, setIsAlarmPlaying] = useState(false);
+  const alarmAudioRef = useRef<HTMLAudioElement | null>(null);
   
   // Check localStorage for saved timer state
   const getInitialState = () => {
@@ -94,11 +98,12 @@ export const TimerProvider: React.FC<TimerProviderProps> = ({ children }) => {
     
     // Play sound if browser supports it
     try {
-      const audio = new Audio('/completion-sound.mp3');
-      audio.volume = 0.3;
-      audio.play().catch(() => {
+      alarmAudioRef.current = new Audio('/alarm.mp3');
+      alarmAudioRef.current.volume = 0.3;
+      alarmAudioRef.current.play().catch(() => {
         console.log('Audio autoplay was prevented');
       });
+      setIsAlarmPlaying(true);
     } catch (error) {
       console.error('Error playing audio:', error);
     }
@@ -259,6 +264,15 @@ export const TimerProvider: React.FC<TimerProviderProps> = ({ children }) => {
     setIsTimerVisible(prev => !prev);
   }, []);
   
+  // Stop alarm sound
+  const stopAlarm = useCallback(() => {
+    if (alarmAudioRef.current) {
+      alarmAudioRef.current.pause();
+      alarmAudioRef.current.currentTime = 0;
+      setIsAlarmPlaying(false);
+    }
+  }, []);
+
   // Formatted time (MM:SS)
   const formattedTime = formatTime(time);
   
@@ -282,6 +296,7 @@ export const TimerProvider: React.FC<TimerProviderProps> = ({ children }) => {
     progress,
     totalTime,
     isTimerVisible,
+    isAlarmPlaying,
     actions: {
       start,
       pause,
@@ -289,7 +304,8 @@ export const TimerProvider: React.FC<TimerProviderProps> = ({ children }) => {
       reset,
       skip,
       setCustomTime,
-      toggleTimerVisibility
+      toggleTimerVisibility,
+      stopAlarm
     }
   }), [
     time, 
@@ -298,13 +314,15 @@ export const TimerProvider: React.FC<TimerProviderProps> = ({ children }) => {
     progress, 
     totalTime, 
     isTimerVisible,
+    isAlarmPlaying,
     start,
     pause,
     resume,
     reset,
     skip,
     setCustomTime,
-    toggleTimerVisibility
+    toggleTimerVisibility,
+    stopAlarm
   ]);
 
   return (

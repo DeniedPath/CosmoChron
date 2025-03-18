@@ -1,18 +1,104 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { Award, CheckCircle2, Trophy, Rocket } from 'lucide-react';
+import { Award, CheckCircle2, Trophy, Rocket, Share2, Copy, Facebook, Linkedin } from 'lucide-react';
+// Use a custom Twitter icon to avoid the deprecated one
 import { toast } from '@/hooks/use-toast';
-import { getMissions, updateMissionProgress, claimMissionReward } from '@/utils/missionUtils';
+import { getMissions, claimMissionReward, shareMissionAchievement } from '@/utils/missionUtils';
 import { Mission } from '@/types/missions';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+// Custom Twitter icon component to replace the deprecated one
+const TwitterIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1DA1F2" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path>
+  </svg>
+);
 
 const MissionSystem = () => {
   const [missions, setMissions] = useState<Mission[]>([]);
   const [activeMission, setActiveMission] = useState<Mission | null>(null);
+
+  // Render the appropriate action buttons based on mission state
+  const renderMissionActionButtons = (mission: Mission) => {
+    // Case 1: Mission is completed but not claimed yet
+    if (mission.completed && !mission.claimed) {
+      return (
+        <Button
+          size="sm"
+          onClick={() => handleClaimReward(mission.id)}
+          className="bg-cosmic-highlight hover:bg-cosmic-highlight/90 text-xs h-7 px-2"
+        >
+          <Award className="w-3 h-3 mr-1" />
+          Claim Reward
+        </Button>
+      );
+    }
+    
+    // Case 2: Mission is completed and claimed
+    if (mission.claimed) {
+      return (
+        <>
+          <span className="text-cosmic-highlight/70 mr-2">Claimed</span>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button 
+                size="sm" 
+                variant="outline" 
+                className="border-cosmic-highlight/30 bg-cosmic-blue/10 hover:bg-cosmic-blue/20 text-xs h-7 px-2"
+              >
+                <Share2 className="w-3 h-3 mr-1" />
+                Share
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="bg-cosmic-blue/90 border-cosmic-highlight/30 backdrop-blur-lg text-cosmic-white">
+              <DropdownMenuItem 
+                className="flex items-center cursor-pointer hover:bg-cosmic-purple/20"
+                onClick={() => handleShareMission(mission, 'twitter')}
+              >
+                <div className="w-4 h-4 mr-2 text-[#1DA1F2]">
+                  <TwitterIcon />
+                </div>
+                Twitter
+              </DropdownMenuItem>
+              <DropdownMenuItem 
+                className="flex items-center cursor-pointer hover:bg-cosmic-purple/20"
+                onClick={() => handleShareMission(mission, 'facebook')}
+              >
+                <Facebook className="w-4 h-4 mr-2 text-[#4267B2]" />
+                Facebook
+              </DropdownMenuItem>
+              <DropdownMenuItem 
+                className="flex items-center cursor-pointer hover:bg-cosmic-purple/20"
+                onClick={() => handleShareMission(mission, 'linkedin')}
+              >
+                <Linkedin className="w-4 h-4 mr-2 text-[#0077B5]" />
+                LinkedIn
+              </DropdownMenuItem>
+              <DropdownMenuItem 
+                className="flex items-center cursor-pointer hover:bg-cosmic-purple/20"
+                onClick={() => handleShareMission(mission, 'copy')}
+              >
+                <Copy className="w-4 h-4 mr-2" />
+                Copy Text
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </>
+      );
+    }
+    
+    // Case 3: Mission is not completed (default case)
+    return null;
+  };
 
   useEffect(() => {
     // Load missions from storage
@@ -26,6 +112,9 @@ const MissionSystem = () => {
     }
   }, []);
 
+  // This function is currently not used but kept for future functionality
+  // If you don't plan to use it in the future, you can safely remove it
+  /* 
   const handleProgressUpdate = (missionId: string, progress: number) => {
     const updatedMissions = updateMissionProgress(missionId, progress);
     setMissions(updatedMissions);
@@ -47,6 +136,7 @@ const MissionSystem = () => {
     const nextActive = updatedMissions.find(m => !m.completed && !m.claimed);
     setActiveMission(nextActive || null);
   };
+  */
 
   const handleClaimReward = (missionId: string) => {
     const updatedMissions = claimMissionReward(missionId);
@@ -64,6 +154,24 @@ const MissionSystem = () => {
     // Update active mission
     const nextActive = updatedMissions.find(m => !m.completed && !m.claimed);
     setActiveMission(nextActive || null);
+  };
+
+  const handleShareMission = (mission: Mission, platform: 'twitter' | 'facebook' | 'linkedin' | 'copy') => {
+    shareMissionAchievement(mission, platform);
+    
+    if (platform === 'copy') {
+      toast({
+        title: "Copied to Clipboard!",
+        description: "Your achievement has been copied to clipboard.",
+        duration: 3000,
+      });
+    } else {
+      toast({
+        title: "Sharing Achievement!",
+        description: `Opening ${platform.charAt(0).toUpperCase() + platform.slice(1)} to share your achievement.`,
+        duration: 3000,
+      });
+    }
   };
 
   return (
@@ -155,18 +263,9 @@ const MissionSystem = () => {
                         {mission.progress} / {mission.requiredProgress} {mission.unit}
                       </span>
                       
-                      {mission.completed && !mission.claimed ? (
-                        <Button
-                          size="sm"
-                          onClick={() => handleClaimReward(mission.id)}
-                          className="bg-cosmic-highlight hover:bg-cosmic-highlight/90 text-xs h-7 px-2"
-                        >
-                          <Award className="w-3 h-3 mr-1" />
-                          Claim Reward
-                        </Button>
-                      ) : mission.claimed ? (
-                        <span className="text-cosmic-highlight/70">Claimed</span>
-                      ) : null}
+                      <div className="flex space-x-2">
+                        {renderMissionActionButtons(mission)}
+                      </div>
                     </div>
                   </div>
                 </CardContent>

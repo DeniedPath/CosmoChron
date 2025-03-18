@@ -8,7 +8,7 @@ const Footer: React.FC = () => {
       <p>Space Timer • Making productivity out of this world</p>
       <div className="flex items-center justify-center mt-4 space-x-4">
         <a 
-          href="https://github.com"
+          href="https://github.com/DeniedPath"
           target="_blank"
           rel="noopener noreferrer"
           className="hover:text-cosmic-white transition-colors"

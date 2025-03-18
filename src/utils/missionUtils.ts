@@ -1,4 +1,3 @@
-
 import { Mission } from '@/types/missions';
 import { getTotalFocusMinutes } from './timerUtils';
 
@@ -277,5 +276,50 @@ export const resetWeeklyMissions = (): void => {
     
     saveMissions(updatedMissions);
     localStorage.setItem('lastWeeklyReset', weekNumber);
+  }
+};
+
+/**
+ * Generate a shareable message for a completed mission
+ */
+export const generateShareMessage = (mission: Mission): { text: string, title: string } => {
+  const date = mission.completedAt ? new Date(mission.completedAt) : new Date();
+  const formattedDate = date.toLocaleDateString('en-US', { 
+    year: 'numeric', 
+    month: 'short', 
+    day: 'numeric' 
+  });
+  
+  const title = `I completed the "${mission.title}" mission in Cosmic Focus!`;
+  const text = `🚀 Achievement Unlocked: ${mission.title} 🚀\n\nI just earned ${mission.rewardPoints} cosmic points by completing this mission: "${mission.description}"\n\nEarned on ${formattedDate}\n\n#CosmicFocus #Productivity`;
+  
+  return { text, title };
+};
+
+/**
+ * Share mission achievement to social media
+ */
+export const shareMissionAchievement = (mission: Mission, platform: 'twitter' | 'facebook' | 'linkedin' | 'copy'): void => {
+  const { text, title } = generateShareMessage(mission);
+  
+  switch (platform) {
+    case 'twitter':
+      window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank');
+      break;
+    case 'facebook':
+      window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}&quote=${encodeURIComponent(text)}`, '_blank');
+      break;
+    case 'linkedin':
+      window.open(`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(window.location.href)}&title=${encodeURIComponent(title)}&summary=${encodeURIComponent(text)}`, '_blank');
+      break;
+    case 'copy':
+      navigator.clipboard.writeText(text)
+        .then(() => {
+          // Success message handled by the component
+        })
+        .catch(err => {
+          console.error('Failed to copy text: ', err);
+        });
+      break;
   }
 };

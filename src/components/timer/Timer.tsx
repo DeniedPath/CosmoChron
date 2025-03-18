@@ -9,7 +9,7 @@ import { getRandomSpaceFact } from '@/utils/timerUtils';
 import { completeBreathingGuideMission } from '@/utils/missionUtils';
 import { toast } from '@/hooks/use-toast';
 import { Button } from '../ui/button';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, VolumeX } from 'lucide-react';
 
 const Timer = () => {
   const [spaceFact, setSpaceFact] = useState<string>('');
@@ -21,7 +21,8 @@ const Timer = () => {
     formattedTime, 
     state, 
     progress,
-    actions: { start, pause, reset, skip, setCustomTime }
+    isAlarmPlaying,
+    actions: { start, pause, reset, skip, setCustomTime, stopAlarm }
   } = useGlobalTimer();
   
   // Set isClient to true when component mounts on client
@@ -108,6 +109,17 @@ const Timer = () => {
         onSkip={skip}
         onTimeChange={setCustomTime}
       />
+      
+      {/* Stop Alarm Button - only shown when alarm is playing */}
+      {isAlarmPlaying && (
+        <Button 
+          onClick={stopAlarm}
+          className="mt-4 bg-red-500/70 hover:bg-red-600/90 text-white font-medium"
+        >
+          <VolumeX className="w-4 h-4 mr-2" />
+          Stop Alarm
+        </Button>
+      )}
       
       {/* Space Fact (shown after completion) */}
       {spaceFact && state === 'completed' && isClient && (
