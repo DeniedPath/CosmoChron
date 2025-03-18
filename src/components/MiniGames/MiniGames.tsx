@@ -1,14 +1,20 @@
-
 import React from 'react';
 import MiniGameCard from './MiniGameCard';
+import { useRouter } from 'next/router';
 import { toast } from '@/components/ui/use-toast';
 
 const MiniGames = () => {
-  const handlePlay = (game: string) => {
-    toast({
-      title: "Coming Soon!",
-      description: `${game} will be available in the next update.`,
-    });
+  const router = useRouter();
+
+  const handlePlay = (game: string, path?: string) => {
+    if (path) {
+      router.push(path);
+    } else {
+      toast({
+        title: "Coming Soon!",
+        description: `${game} will be available in the next update.`,
+      });
+    }
   };
 
   return (
@@ -25,21 +31,21 @@ const MiniGames = () => {
           title="Asteroid Dodge"
           description="Navigate through an asteroid field in this classic arcade-style game."
           duration={5}
-          onPlay={() => handlePlay("Asteroid Dodge")}
+          onPlay={() => handlePlay("Asteroid Dodge", "/games/asteroid-dodge")}
         />
         
         <MiniGameCard
           title="Space Memory"
           description="Match pairs of cosmic objects in this memory challenge."
           duration={3}
-          onPlay={() => handlePlay("Space Memory")}
+          onPlay={() => handlePlay("Space Memory", "/games/space-memory")}
         />
         
         <MiniGameCard
           title="Constellation Connect"
           description="Connect stars to recreate famous constellations against time."
           duration={4}
-          onPlay={() => handlePlay("Constellation Connect")}
+          onPlay={() => handlePlay("Constellation Connect", "/games/constellation-connect")}
         />
       </div>
     </div>

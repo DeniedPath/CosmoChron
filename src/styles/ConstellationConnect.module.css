@@ -1,0 +1,143 @@
+/* styles/ConstellationConnect.module.css */
+.container {
+  min-height: 100vh;
+  padding: 2rem 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  background: linear-gradient(to bottom, #000000, #0f0c29);
+  color: white;
+}
+
+.main {
+  width: 100%;
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.title {
+  margin: 0 0 1.5rem;
+  line-height: 1.15;
+  font-size: 2.5rem;
+  text-align: center;
+  background: linear-gradient(to right, #00ffff, #3f51b5);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 5px rgba(0, 255, 255, 0.5));
+}
+
+.gameInfo {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  border: 1px solid rgba(0, 255, 255, 0.3);
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+}
+
+.score, .constellation, .timer {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.gameCanvas {
+  width: 100%;
+  height: 600px;
+  background-color: #000011;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 255, 255, 0.5);
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+  position: relative;
+  cursor: pointer;
+}
+
+.overlay {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 10;
+  border-radius: 10px;
+  text-align: center;
+  padding: 2rem;
+  margin-top: 1.5rem;
+  backdrop-filter: blur(5px);
+}
+
+.overlay h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: #00ffff;
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
+}
+
+.overlay p {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  max-width: 80%;
+  line-height: 1.6;
+}
+
+.button {
+  background: linear-gradient(to right, #00bcd4, #3f51b5);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 0.8rem 2rem;
+  font-size: 1.2rem;
+  cursor: pointer;
+  margin-top: 1.5rem;
+  font-weight: bold;
+  transition: all 0.2s ease;
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+}
+
+.button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+}
+
+.backButton {
+  margin-top: 2rem;
+  padding: 0.5rem 1.5rem;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+.backButton:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .gameCanvas {
+    height: 500px;
+  }
+  
+  .gameInfo {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .title {
+    font-size: 2rem;
+  }
+}
