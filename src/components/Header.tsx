@@ -13,7 +13,7 @@ const Header: React.FC<HeaderProps> = ({ cosmicPoints }) => {
     <header className="flex items-center justify-between mb-12">
       <div className="flex items-center space-x-3">
         <Rocket className="w-7 h-7 text-cosmic-highlight" />
-        <h1 className="text-2xl font-bold cosmic-highlight">Space Timer</h1>
+        <h1 className="text-2xl font-bold cosmic-highlight">CosmoChron</h1>
       </div>
       
       <div className="flex items-center space-x-4">

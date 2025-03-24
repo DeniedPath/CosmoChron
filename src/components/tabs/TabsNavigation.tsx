@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
@@ -8,12 +7,13 @@ import {
   Trophy,
   CloudSun,
   Building2,
-  Gamepad2
+  Gamepad2,
+  MessageSquare
 } from 'lucide-react';
 
 const TabsNavigation: React.FC = () => {
   return (
-    <TabsList className="grid grid-cols-7 w-full max-w-lg mx-auto mb-8 bg-cosmic-blue/20 border border-cosmic-highlight/20 backdrop-blur-md">
+    <TabsList className="grid grid-cols-8 w-full max-w-lg mx-auto mb-8 bg-cosmic-blue/20 border border-cosmic-highlight/20 backdrop-blur-md">
       <TabsTrigger 
         value="timer"
         className="data-[state=active]:bg-cosmic-purple/40 data-[state=active]:text-cosmic-white"
@@ -62,6 +62,13 @@ const TabsNavigation: React.FC = () => {
       >
         <Gamepad2 className="h-4 w-4 mr-2" />
         Games
+      </TabsTrigger>
+      <TabsTrigger 
+        value="chat"
+        className="data-[state=active]:bg-cosmic-purple/40 data-[state=active]:text-cosmic-white"
+      >
+        <MessageSquare className="h-4 w-4 mr-2" />
+        Chat
       </TabsTrigger>
     </TabsList>
   );
