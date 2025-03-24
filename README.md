@@ -40,6 +40,7 @@ CosmoChron is an AI-powered celestial-themed Focus Timer that helps users manage
 ### Prerequisites
 * Node.js (v16.0.0 or higher)
 * npm (v8.0.0 or higher)
+* OpenAI API key (for the chatbot feature)
 
 ### Setup Instructions
 Clone the repository:
@@ -54,6 +55,15 @@ Install dependencies:
 ```
 npm install
 ```
+
+### Environment Setup
+Create a `.env.local` file in the root directory with the following content:
+
+```
+OPENAI_API_KEY=your_openai_api_key_here
+```
+
+Replace `your_openai_api_key_here` with your actual OpenAI API key. You can obtain an API key by signing up at [OpenAI's platform](https://platform.openai.com/).
 
 Start the development server:
 
