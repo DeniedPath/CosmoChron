@@ -12,7 +12,7 @@ const AsteroidDodge: NextPage = () => {
   const [gameOver, setGameOver] = useState<boolean>(false);
   const [gameStarted, setGameStarted] = useState<boolean>(false);
   const [lives, setLives] = useState<number>(3);
-  const [timeLeft, setTimeLeft] = useState<number>(300); // 5 minutes in seconds
+  const [timeLeft, setTimeLeft] = useState<number>(120); // 2 minutes in seconds
   
   // Game objects and animation references
   const gameRef = useRef<AsteroidGameState>({
@@ -68,7 +68,7 @@ const AsteroidDodge: NextPage = () => {
     // Reset game state
     setScore(0);
     setLives(3);
-    setTimeLeft(300);
+    setTimeLeft(120);
     setGameOver(false);
   };
   
@@ -168,7 +168,7 @@ const AsteroidDodge: NextPage = () => {
       x: Math.random() * (canvas.width - size),
       y: -size,
       size: size,
-      speed: Math.random() * 2 + 2,
+      speed: Math.random() * 3 + 3.5, // Increased speed range from (2-4) to (3.5-6.5)
       vertices: []
     };
     
@@ -291,25 +291,44 @@ const AsteroidDodge: NextPage = () => {
   useEffect(() => {
     if (!gameStarted) return;
     
+    const keys: {[key: string]: boolean} = {};
+    
     const handleKeyDown = (e: KeyboardEvent): void => {
+      keys[e.key] = true;
+    };
+    
+    const handleKeyUp = (e: KeyboardEvent): void => {
+      keys[e.key] = false;
+    };
+    
+    // Smooth movement using animation frame
+    const moveShip = () => {
       const ship = gameRef.current.ship;
       const canvas = canvasRef.current;
       if (!canvas) return;
       
-      switch (e.key) {
-        case 'ArrowLeft':
-          ship.x = Math.max(ship.width / 2, ship.x - ship.speed);
-          break;
-        case 'ArrowRight':
-          ship.x = Math.min(canvas.width - ship.width / 2, ship.x + ship.speed);
-          break;
+      // Apply movement based on keys pressed
+      if (keys['ArrowLeft']) {
+        ship.x = Math.max(ship.width / 2, ship.x - ship.speed);
       }
+      if (keys['ArrowRight']) {
+        ship.x = Math.min(canvas.width - ship.width / 2, ship.x + ship.speed);
+      }
+      
+      // Request next frame for smooth movement
+      requestAnimationFrame(moveShip);
     };
     
+    // Start the movement loop
+    const movementId = requestAnimationFrame(moveShip);
+    
     window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
     
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+      cancelAnimationFrame(movementId);
     };
   }, [gameStarted]);
   
@@ -386,7 +405,7 @@ const AsteroidDodge: NextPage = () => {
               <>
                 <h2>Asteroid Dodge</h2>
                 <p>Navigate through an asteroid field using the arrow keys.</p>
-                <p>Avoid collisions and survive for 5 minutes!</p>
+                <p>Avoid collisions and survive for 2 minutes!</p>
                 <button className={styles.button} onClick={startGame}>
                   Start Game
                 </button>
