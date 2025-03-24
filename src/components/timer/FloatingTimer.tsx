@@ -5,7 +5,7 @@ import { useGlobalTimer } from '@/contexts/TimerContext';
 import { Button } from '@/components/ui/button';
 import { 
   Play, Pause, RotateCcw, SkipForward, 
-  Minimize2, X, Clock 
+  Minimize2, X
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -40,7 +40,7 @@ const FloatingTimer: React.FC = () => {
     <div 
       className={cn(
         "fixed bottom-4 right-4 z-50 bg-cosmic-blue/90 backdrop-blur-md rounded-2xl shadow-lg transition-all duration-300 border border-cosmic-highlight/30",
-        isMinimized ? "w-14 h-14" : "w-64 p-4"
+        isMinimized ? "w-auto h-14 px-4" : "w-64 p-4"
       )}
       style={{ 
         maxWidth: 'calc(100vw - 32px)',
@@ -55,7 +55,7 @@ const FloatingTimer: React.FC = () => {
           aria-label="Expand timer"
         >
           <div className="relative flex items-center justify-center">
-            <Clock className="h-6 w-6" />
+            <span className="text-sm font-bold">{formattedTime}</span>
             {state === 'running' && (
               <div className="absolute -top-1 -right-1 w-2 h-2 bg-cosmic-highlight rounded-full animate-pulse" />
             )}

@@ -9,7 +9,8 @@ import SpaceStation from '@/components/features/SpaceStation';
 import MiniGames from '@/components/MiniGames/MiniGames';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Building2, CloudLightning, CloudRain, CloudSnow, CloudSun, Sun } from 'lucide-react';
+import { Building2, CloudLightning, CloudRain, CloudSnow, CloudSun, MessageSquare, Sun } from 'lucide-react';
+import { useRouter } from 'next/router';
 
 interface TabContentProps {
   totalFocusMinutes: number;
@@ -22,6 +23,12 @@ const TabContent: React.FC<TabContentProps> = ({
   level, 
   progressPercent 
 }) => {
+  const router = useRouter();
+  
+  const handleChatClick = () => {
+    router.push('/chat');
+  };
+  
   return (
     <>
       <TabsContent value="timer" className="animate-fade-in mt-0">
@@ -106,6 +113,25 @@ const TabContent: React.FC<TabContentProps> = ({
       
       <TabsContent value="games" className="animate-fade-in mt-0">
         <MiniGames />
+      </TabsContent>
+      
+      <TabsContent value="chat" className="animate-fade-in mt-0">
+        <div className="text-center py-8">
+          <div className="mb-6">
+            <MessageSquare className="h-16 w-16 mx-auto text-cosmic-purple" />
+            <h2 className="text-2xl font-bold mt-4 text-cosmic-white">CosmoChat</h2>
+            <p className="text-cosmic-white/70 mt-2">
+              Chat with your AI companion in a cosmic-themed environment
+            </p>
+          </div>
+          <Button 
+            onClick={handleChatClick}
+            className="bg-cosmic-purple/60 hover:bg-cosmic-purple/80"
+          >
+            <MessageSquare className="mr-2 h-4 w-4" />
+            Open Chat Interface
+          </Button>
+        </div>
       </TabsContent>
     </>
   );
