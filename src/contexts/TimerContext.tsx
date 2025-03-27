@@ -82,13 +82,6 @@ export const TimerProvider: React.FC<TimerProviderProps> = ({ children }) => {
   const handleComplete = useCallback(() => {
     if (!isClient) return;
     
-    // Show success notification
-    toast({
-      title: "Focus Session Completed!",
-      description: "Great job! Take a short break before your next session.",
-      duration: 5000,
-    });
-    
     // Save completed session
     const durationMinutes = Math.floor(totalTime / 60);
     saveSession(durationMinutes, true);
@@ -99,15 +92,31 @@ export const TimerProvider: React.FC<TimerProviderProps> = ({ children }) => {
     // Play sound if browser supports it
     try {
       alarmAudioRef.current = new Audio('/alarm.mp3');
-      alarmAudioRef.current.volume = 0.3;
-      alarmAudioRef.current.play().catch(() => {
-        console.log('Audio autoplay was prevented');
-      });
+      alarmAudioRef.current.play().catch(e => console.error("Error playing alarm:", e));
       setIsAlarmPlaying(true);
-    } catch (error) {
-      console.error('Error playing audio:', error);
+    } catch (e) {
+      console.error("Error with audio:", e);
     }
-  }, [totalTime, isClient]);
+    
+    // Reset timer state
+    setState('completed');
+    clearInterval(intervalRef.current || undefined);
+    intervalRef.current = null;
+    
+    // Show success notification - moved to useEffect to avoid render issues
+  }, [isClient, totalTime]);
+  
+  // Show completion toast when state changes to completed
+  useEffect(() => {
+    if (state === 'completed') {
+      // Show success notification
+      toast({
+        title: "Focus Session Completed!",
+        description: "Great job! Take a short break before your next session.",
+        duration: 5000,
+      });
+    }
+  }, [state]);
 
   // Initialize state from localStorage only on client-side
   useEffect(() => {

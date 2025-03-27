@@ -1,6 +1,6 @@
 # CosmoChron
 
-CosmoChron is an AI-powered celestial-themed Focus Timer that helps users manage their time effectively through immersive space backgrounds, achievement systems, productivity tracking, and interactive features.
+CosmoChron is an AI-powered celestial-themed productivity app that helps users manage their time effectively through immersive space backgrounds, achievement systems, productivity tracking, and interactive features including a personalized AI companion.
 
 <p align="center">
   <img src="./public/CosmoChron.jpeg" alt="CosmoChron Logo" width="200" />
@@ -21,15 +21,16 @@ CosmoChron is an AI-powered celestial-themed Focus Timer that helps users manage
 * **Voice Commands**: Control your timer hands-free
 * **Space Facts**: Learn about astronomy during breaks
 * **Collaborative Focus**: Connect with friends for shared productivity sessions
+* **AI Companion**: Chat with Alex, your space explorer friend who has their own personality and stories
 
 ## 📋 Table of Contents
 
 * [Installation](#installation)
 * [Usage](#usage)
-* [Development Process](#development-process)
+* [Features in Detail](#features-in-detail)
 * [Technologies](#technologies)
 * [Project Structure](#project-structure)
-* [Research Findings](#research-findings)
+* [Development Notes](#development-notes)
 * [Future Enhancements](#future-enhancements)
 * [About CosmoChron](#about-cosmochron)
 * [License](#license)
@@ -41,6 +42,7 @@ CosmoChron is an AI-powered celestial-themed Focus Timer that helps users manage
 * Node.js (v16.0.0 or higher)
 * npm (v8.0.0 or higher)
 * OpenAI API key (for the chatbot feature)
+* Weather API key (for weather integration)
 
 ### Setup Instructions
 Clone the repository:
@@ -61,9 +63,10 @@ Create a `.env.local` file in the root directory with the following content:
 
 ```
 OPENAI_API_KEY=your_openai_api_key_here
+WEATHER_API_KEY=your_weather_api_key_here
 ```
 
-Replace `your_openai_api_key_here` with your actual OpenAI API key. You can obtain an API key by signing up at [OpenAI's platform](https://platform.openai.com/).
+Replace the placeholder values with your actual API keys.
 
 Start the development server:
 
@@ -86,232 +89,139 @@ http://localhost:3000
 4. **Reset**: Start fresh with a new timer session
 5. **Complete Session**: Receive visual notification when your session completes
 
-### Breathing Guidance
-1. **Toggle Feature**: Enable/disable breathing guidance in settings
-2. **Follow Animation**: Sync your breathing with the expanding and contracting animation
-3. **Audio Cues**: Optionally enable subtle audio prompts
+### Chat with Alex
+1. **Open Chat**: Navigate to the chat section to interact with Alex
+2. **Personalize Experience**: Update your profile in settings to make conversations more relevant
+3. **Share Experiences**: Talk to Alex about your day, ask for advice, or just chat
+4. **Track Mood**: Set your current mood to receive appropriate responses
+
+### Space Station
+1. **Visit Your Station**: Track your progress and achievements
+2. **View Stats**: See your focus time, completion rate, and current streak
+3. **Unlock Features**: Gain access to new station modules as you progress
+
+### Mini-Games
+1. **Asteroid Dodge**: Take a break with this fun mini-game
+2. **More Games**: Unlock additional games as you complete focus sessions
+
+## 🌟 Features in Detail
+
+### AI Companion - Alex
+Alex is your space explorer friend who has their own personality, stories, and experiences. Unlike typical AI assistants, Alex:
+* Has a distinct personality with opinions and preferences
+* Shares stories about space exploration adventures
+* Uses natural conversation with roleplay actions
+* Adapts to your mood and personality preferences
+* Remembers details about your conversations
+* Never breaks character or acts like an assistant
+
+### Weather Integration
+The app integrates with weather APIs to:
+* Adapt the space background based on local weather conditions
+* Create dynamic visual experiences that change throughout the day
+* Provide subtle weather information without disrupting focus
+
+### Achievement System
+Track your progress and stay motivated with:
+* Tiered achievements for consistent usage
+* Special badges for milestone accomplishments
+* Secret achievements that can be discovered through exploration
+* Visual representation of progress in your space station
 
 ### Analytics Dashboard
-1. **View Metrics**: See your focus time, completion rate, and current streak
-2. **Explore Patterns**: Analyze your productivity by day and time
-3. **Session History**: Review your recent focus sessions
-4. **Filter Data**: View analytics for the past week, month, or year
-5. **Productivity Score**: Track your overall productivity with our scoring system
-6. **Export Reports**: Download your analytics data in PDF or CSV format
-
-### Missions (achievements)
-1. **Unlock Milestones**: Complete sessions to unlock various achievements
-2. **Track Progress**: View your achievement collection and completion status
-3. **Discover Secrets**: Find hidden achievements through special interactions
-
-### Settings
-1. **Sound Preferences**: Toggle completion sounds on/off
-2. **Auto-Start**: Configure automatic session starts
-3. **Notification Settings**: Customize how you receive alerts
-4. **Theme Selection**: Choose your preferred space visualization
-
-## 🛠️ Development Process
-
-This project was developed over a multi-week process following these phases:
-
-### Week 1: Basic Timer Display
-* Created functional timer component
-* Implemented basic display formatting
-* Established component architecture
-* Added documentation for core components
-
-### Week 2: Interactive Timer Controls
-* Built comprehensive timer functionality
-* Implemented start/pause/reset controls
-* Created custom timer hook
-* Added error handling and edge cases
-
-### Week 3: Styled Interface
-* Enhanced UI with space theme
-* Implemented progress indicators
-* Added streak counter and basic analytics
-* Created settings panel and notifications
-
-### Week 4: Session Management
-* Implemented advanced timer features
-* Created comprehensive settings management
-* Added data persistence through localStorage
-* Developed session history tracking
-
-### Week 5: Focus Analytics
-* Built data visualization components
-* Implemented streak calculation
-* Created session statistics tracking
-* Added productivity insights
-
-### Week 6: Achievement System & Space Background
-* Developed achievement unlocking system
-* Created secret achievements
-* Implemented solar system visualization
-* Added planet selection and animation
-
-### Week 7-8: Enhanced Features
-* Implemented breathing guidance system
-* Added celestial events
-* Created additional engagement features
-* Expanded analytics dashboard
+Understand your productivity patterns with:
+* Daily, weekly, and monthly focus time tracking
+* Session completion rates and streaks
+* Productivity score based on multiple factors
+* Exportable reports for personal review
 
 ## 💻 Technologies
 
-* **Next.js**: React framework for the application
+* **Next.js 14**: React framework with App Router architecture
 * **TypeScript**: For type-safe code
 * **Tailwind CSS**: For responsive styling
 * **Framer Motion**: For smooth animations
-* **Three.js**: For 3D space visualization
+* **OpenAI API**: For AI companion functionality
+* **Weather API**: For dynamic backgrounds
 * **React Context API**: For state management
 * **localStorage**: For data persistence
-* **Recharts**: For data visualization
 * **shadcn/ui**: For UI components
 
 ## 📂 Project Structure
 
 ```
 src/
+├── app/                      # App Router structure
+│   ├── layout.tsx            # Root layout
+│   ├── page.tsx              # Home page
+│   ├── chat/                 # Chat with Alex
+│   ├── settings/             # User settings
+│   ├── help/                 # Help documentation
+│   ├── station/              # Space station
+│   ├── games/                # Mini-games
+│   └── api/                  # API routes
+│       ├── chat/             # AI chat endpoint
+│       └── weather/          # Weather data endpoint
 ├── components/
-│   ├── timer/
-│   │   ├── TimerDisplay.tsx
-│   │   ├── TimerControls.tsx
-│   │   ├── TimerState.tsx
-│   │   └── TimerSettings.tsx
-│   ├── analytics/
-│   │   ├── Analytics.tsx
-│   │   ├── dashboard/
-│   │   │   ├── AnalyticsDashboard.tsx
-│   │   │   ├── ProductivityScore.tsx
-│   │   │   ├── DateRangeSelector.tsx
-│   │   │   ├── DailyFocusChart.tsx
-│   │   │   ├── WeeklyTrendChart.tsx
-│   │   │   ├── MonthlyAnalysisChart.tsx
-│   │   │   ├── YearlyComparisonChart.tsx
-│   │   │   └── ReportGenerator.tsx
-│   │   ├── ProgressIndicator.tsx
-│   │   ├── SessionStats.tsx
-│   │   └── StreakCounter.tsx
-│   ├── settings/
-│   │   ├── SettingsPanel.tsx
-│   │   ├── SettingsButton.tsx
-│   │   ├── ThemeSelector.tsx
-│   │   └── NotificationSettings.tsx
-│   ├── achievements/
-│   │   ├── AchievementsPanel.tsx
-│   │   ├── AchievementButton.tsx
-│   │   ├── AchievementCard.tsx
-│   │   ├── MissionTracker.tsx
-│   │   └── AchievementContext.tsx
-│   ├── features/
-│   │   ├── BreathingGuidance.tsx
-│   │   ├── CelestialEvents.tsx
-│   │   ├── SpaceFacts.tsx
-│   │   └── VoiceCommands.tsx
-│   ├── feedback/
-│   │   ├── NotificationSystem.tsx
-│   │   ├── ToastManager.tsx
-│   │   └── SoundEffects.tsx
-│   ├── space/
-│   │   ├── SpaceBackground.tsx
-│   │   ├── SpaceParticles.tsx
-│   │   ├── PlanetarySystem.tsx
-│   │   ├── SpaceStation.tsx
-│   │   └── CelestialBodies/
-│   │       ├── Planet.tsx
-│   │       ├── Star.tsx
-│   │       ├── Comet.tsx
-│   │       └── Asteroid.tsx
-│   ├── ui/
-│   │   ├── Button.tsx
-│   │   ├── Card.tsx
-│   │   ├── Dialog.tsx
-│   │   ├── Dropdown.tsx
-│   │   └── Tabs.tsx
-│   └── context/
-│       ├── SettingsContext.tsx
-│       ├── TimerContext.tsx
-│       ├── ThemeContext.tsx
-│       └── UserContext.tsx
+│   ├── ui/                   # UI components
+│   ├── timer/                # Timer functionality
+│   ├── chat/                 # Chat interface
+│   ├── settings/             # Settings panel
+│   ├── help/                 # Help content
+│   ├── station/              # Space station content
+│   ├── games/                # Game components
+│   ├── MiniGames/            # Mini-game components
+│   └── tabs/                 # Tab navigation
+├── contexts/
+│   ├── ChatContext.tsx       # Chat state management
+│   ├── TimerContext.tsx      # Timer state management
+│   ├── ThemeContext.tsx      # Theme preferences
+│   └── UserContext.tsx       # User data management
 ├── hooks/
-│   ├── useTimer.ts
-│   ├── useAnalytics.ts
-│   ├── useNotifications.ts
-│   ├── useAchievementTracker.ts
-│   ├── useBreathingGuidance.ts
-│   ├── useLocalStorage.ts
-│   ├── useSpaceBackground.ts
-│   └── useWeather.ts
-├── utils/
-│   ├── timerUtils.ts
-│   ├── analytics/
-│   │   ├── dataProcessing.ts
-│   │   ├── reportGeneration.ts
-│   │   └── productivityCalculations.ts
-│   ├── achievements/
-│   │   └── missionSystem.ts
-│   └── helpers/
-│       ├── dateUtils.ts
-│       ├── formatters.ts
-│       └── validators.ts
-├── lib/
-│   ├── utils.ts
-│   ├── constants.ts
-│   └── api.ts
+│   ├── useTimer.ts           # Timer functionality
+│   ├── useChat.ts            # Chat functionality
+│   └── use-toast.ts          # Toast notifications
+├── services/
+│   ├── weatherService.ts     # Weather API integration
+│   └── aiService.ts          # AI API integration
 ├── styles/
-│   ├── globals.css
-│   └── animations.css
-├── pages/
-│   ├── _app.tsx
-│   ├── index.tsx
-│   ├── analytics.tsx
-│   ├── achievements.tsx
-│   ├── settings.tsx
-│   └── api/
-│       ├── weather.ts
-│       └── space-facts.ts
-└── public/
-    ├── assets/
-    │   ├── images/
-    │   │   ├── planets/
-    │   │   ├── stars/
-    │   │   ├── achievements/
-    │   │   └── cosmochron-logo.png
-    │   ├── sounds/
-    │   │   ├── notifications/
-    │   │   └── ambient/
-    │   └── fonts/
-    └── favicon.ico
+│   └── globals.css           # Global styles
+└── providers.tsx             # Client-side providers
 ```
 
-## 🔍 Research Findings
+## 🛠️ Development Notes
 
-Our research identified several key insights that informed the application design:
+### App Router Migration
+The project has been migrated from Next.js Pages Router to the App Router architecture, which provides:
+* Improved performance through server components
+* More intuitive routing structure
+* Better code organization
+* Enhanced SEO capabilities
+* Simplified API routes
 
-### User Needs
-* Users prefer visual reinforcement of progress
-* Achievement systems significantly increase engagement
-* Aesthetic experience affects focus quality
-* Customization options are highly valued
-* Breathing exercises enhance focus and reduce stress
+### AI Implementation
+The AI companion (Alex) is implemented using:
+* OpenAI's API for natural language processing
+* Custom system prompts to define Alex's personality
+* Context management to maintain conversation history
+* User data integration for personalized interactions
 
-### Technical Considerations
-* Timer accuracy requires special handling across browsers
-* Background operation needs careful implementation
-* Visual performance must be optimized for various devices
-* Local storage provides adequate persistence for core features
-* Animation performance requires careful optimization
+### State Management
+The application uses React Context API for state management:
+* ChatContext for managing conversations with Alex
+* TimerContext for timer functionality
+* UserContext for user preferences and data
+* ThemeContext for visual customization
 
-### Competitive Analysis
-* Most timer apps lack engaging visuals
-* Achievement systems are underutilized in productivity apps
-* Settings customization is often limited
-* Few apps combine focus timing with immersive experiences
-* Breathing guidance is rarely integrated with timer functionality
+### Data Persistence
+User data is stored locally using:
+* localStorage for session data, user preferences, and chat history
+* Structured data format for analytics and achievements
+* Efficient retrieval mechanisms for performance
 
 ## 🔮 Future Enhancements
 
-Based on our constraints analysis and user feedback, future versions may include:
+Based on our development roadmap and user feedback, future versions may include:
 
 * Cloud synchronization for cross-device usage
 * Additional celestial themes and animations
@@ -323,10 +233,13 @@ Based on our constraints analysis and user feedback, future versions may include
 * Full virtual space station customization
 * Expanded mission system with rewards
 * Community challenges and group goals
+* Enhanced AI capabilities for Alex
+* Voice interaction with Alex
+* Collaborative focus sessions with friends
 
 ## 🌟 About CosmoChron
 
-CosmoChron was created to transform the way people approach focused work. By combining the science of productivity with the wonder of space exploration, we've designed a tool that makes time management both effective and enjoyable.
+CosmoChron was created to transform the way people approach focused work. By combining the science of productivity with the wonder of space exploration and the companionship of an AI friend, we've designed a tool that makes time management both effective and enjoyable.
 
 Our mission is to help users develop better focus habits while providing a momentary escape into the cosmos during their productivity sessions.
 
@@ -338,6 +251,8 @@ CosmoChron is licensed under the MIT License - see the LICENSE file for details.
 
 * Space imagery courtesy of NASA
 * Planet facts from various astronomy resources
+* OpenAI for AI capabilities
+* Weather API for dynamic backgrounds
 * Special thanks to all our beta testers who provided valuable feedback
 
 ---

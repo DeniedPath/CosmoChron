@@ -1,3 +1,5 @@
+"use client";
+
 import React from 'react';
 import { TabsContent } from '@/components/ui/tabs';
 import Timer from '@/components/timer/Timer';
@@ -10,7 +12,7 @@ import MiniGames from '@/components/MiniGames/MiniGames';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Building2, CloudLightning, CloudRain, CloudSnow, CloudSun, MessageSquare, Sun } from 'lucide-react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 interface TabContentProps {
   totalFocusMinutes: number;

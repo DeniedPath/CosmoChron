@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import tailwindcssAnimate from "tailwindcss-animate";
 
 export default {
 	darkMode: ["class"],
@@ -58,7 +59,8 @@ export default {
 					purple: '#2D1B69',
 					accent: '#6E56CF',
 					highlight: '#9277FF',
-					white: '#F8F9FF'
+					white: '#F8F9FF',
+					gold: '#FFD700'
 				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
@@ -147,5 +149,5 @@ export default {
 			}
 		}
 	},
-	plugins: [require("tailwindcss-animate")],
+	plugins: [tailwindcssAnimate],
 } satisfies Config;

@@ -1,6 +1,9 @@
+"use client";
+
 import React, { useState, useRef, useEffect } from 'react';
 import { useChat } from '../../contexts/ChatContext';
-import { Send, Loader2 } from 'lucide-react';
+import { Send, Loader2, Sparkles } from 'lucide-react';
+import ChatExample from './ChatExample';
 
 const ChatInterface: React.FC = () => {
   const { messages, sendMessage, isLoading } = useChat();
@@ -29,81 +32,88 @@ const ChatInterface: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-[600px]">
-      {/* Chat Header */}
-      <div className="p-4 border-b border-slate-700 bg-slate-800/80">
-        <h2 className="text-xl font-semibold">CosmoChat</h2>
-        <p className="text-sm text-slate-400">Your AI companion in the cosmos</p>
-      </div>
+    <div className="space-y-6">
+      {messages.length === 0 && <ChatExample />}
+      
+      <div className="flex flex-col h-[600px] bg-cosmic-blue/10 border border-cosmic-highlight/20 rounded-lg overflow-hidden">
+        {/* Chat Header */}
+        <div className="p-4 border-b border-cosmic-highlight/30 bg-cosmic-blue/30">
+          <h2 className="text-xl font-semibold text-cosmic-white flex items-center gap-2">
+            <Sparkles className="h-5 w-5 text-cosmic-purple" />
+            Cosmic Companion
+          </h2>
+          <p className="text-sm text-cosmic-white/70">Your best friend in the cosmos</p>
+        </div>
 
-      {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {messages.length === 0 ? (
-          <div className="flex items-center justify-center h-full">
-            <div className="text-center text-slate-500">
-              <p className="text-lg mb-2">Start a conversation with your AI companion</p>
-              <p className="text-sm">Ask a question, share your thoughts, or just say hello!</p>
+        {/* Messages Area */}
+        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          {messages.length === 0 ? (
+            <div className="flex items-center justify-center h-full">
+              <div className="text-center text-cosmic-white/60">
+                <p className="text-lg mb-2">Start a conversation with your cosmic best friend</p>
+                <p className="text-sm">Share your thoughts, ask for advice, or just chat about your day!</p>
+              </div>
             </div>
-          </div>
-        ) : (
-          messages.map((message) => (
-            <div
-              key={message.id}
-              className={`flex ${
-                message.role === 'user' ? 'justify-end' : 'justify-start'
-              }`}
-            >
+          ) : (
+            messages.map((message) => (
               <div
-                className={`max-w-[80%] rounded-lg p-3 ${
-                  message.role === 'user'
-                    ? 'bg-blue-600 text-white rounded-tr-none'
-                    : 'bg-slate-700 text-white rounded-tl-none'
+                key={message.id}
+                className={`flex ${
+                  message.role === 'user' ? 'justify-end' : 'justify-start'
                 }`}
               >
-                <div className="whitespace-pre-wrap">{message.content}</div>
                 <div
-                  className={`text-xs mt-1 ${
-                    message.role === 'user' ? 'text-blue-200' : 'text-slate-400'
+                  className={`max-w-[80%] rounded-lg p-3 ${
+                    message.role === 'user'
+                      ? 'bg-cosmic-purple/60 text-white rounded-tr-none'
+                      : 'bg-cosmic-blue/30 text-cosmic-white rounded-tl-none'
                   }`}
                 >
-                  {formatTime(message.timestamp)}
+                  <div className="whitespace-pre-wrap">{message.content}</div>
+                  <div
+                    className={`text-xs mt-1 ${
+                      message.role === 'user' ? 'text-cosmic-white/70' : 'text-cosmic-white/50'
+                    }`}
+                  >
+                    {formatTime(message.timestamp)}
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
+          {isLoading && (
+            <div className="flex justify-start">
+              <div className="bg-cosmic-blue/30 text-cosmic-white rounded-lg rounded-tl-none p-3 max-w-[80%]">
+                <div className="flex items-center space-x-2">
+                  <Loader2 className="h-4 w-4 animate-spin text-cosmic-purple" />
+                  <span>*typing a message*</span>
                 </div>
               </div>
             </div>
-          ))
-        )}
-        {isLoading && (
-          <div className="flex justify-start">
-            <div className="bg-slate-700 text-white rounded-lg rounded-tl-none p-3 max-w-[80%]">
-              <div className="flex items-center space-x-2">
-                <Loader2 className="h-4 w-4 animate-spin" />
-                <span>Thinking...</span>
-              </div>
-            </div>
-          </div>
-        )}
-        <div ref={messagesEndRef} />
-      </div>
+          )}
+          <div ref={messagesEndRef} />
+        </div>
 
-      {/* Input Area */}
-      <div className="border-t border-slate-700 p-4 bg-slate-800/80">
-        <form onSubmit={handleSubmit} className="flex space-x-2">
-          <input
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Type your message..."
-            className="flex-1 bg-slate-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            disabled={isLoading}
-          />
-          <button
-            type="submit"
-            disabled={!input.trim() || isLoading}
-            className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg p-2 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <Send className="h-5 w-5" />
-          </button>
-        </form>
+        {/* Input Area */}
+        <div className="border-t border-cosmic-highlight/30 p-4 bg-cosmic-blue/30">
+          <form onSubmit={handleSubmit} className="flex space-x-2">
+            <input
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Message Alex..."
+              className="flex-1 bg-cosmic-blue/20 text-cosmic-white rounded-lg px-4 py-2 border border-cosmic-highlight/20 focus:outline-none focus:ring-2 focus:ring-cosmic-purple/50"
+              disabled={isLoading}
+            />
+            <button
+              type="submit"
+              disabled={!input.trim() || isLoading}
+              className="bg-cosmic-purple/60 hover:bg-cosmic-purple/80 text-white rounded-lg p-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <Send className="h-5 w-5" />
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );

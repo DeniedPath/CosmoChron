@@ -1,4 +1,4 @@
-// src/pages/Index.tsx
+"use client";
 
 import React, { useState, useEffect } from 'react';
 import SpaceBackground from '@/components/space/SpaceBackground';
@@ -14,7 +14,7 @@ import TabContent from '@/components/tabs/TabContent';
 import Footer from '@/components/Footer';
 import IntroAnimation from '@/components/IntroAnimation';
 
-const Index = () => {
+export default function HomePage() {
   const [showIntro, setShowIntro] = useState(true);
   const [cosmicPoints, setCosmicPoints] = useState(0);
   const [enhancedStars] = useState(true);
@@ -119,6 +119,4 @@ const Index = () => {
       </SpaceBackground>
     </div>
   );
-};
-
-export default Index;
+}

@@ -1,3 +1,4 @@
+"use client";
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
@@ -25,10 +26,10 @@ const MiniGameCard: React.FC<MiniGameCardProps> = ({
           {title}
         </CardTitle>
         <CardDescription className="text-cosmic-white/70">
-          <div className="flex items-center gap-1">
+          <span className="flex items-center gap-1">
             <Timer className="h-4 w-4" />
             {duration} min
-          </div>
+          </span>
         </CardDescription>
       </CardHeader>
       <CardContent>

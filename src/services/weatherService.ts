@@ -13,24 +13,33 @@ export interface WeatherData {
   location: string;    // City name
 }
 
+// Updated to match the new API response format from our Next.js App Router API
 export interface WeatherApiResponse {
-  location: {
-    name: string;
-    region: string;
-    country: string;
+  location: string;
+  country: string;
+  temperature: {
+    celsius: number;
+    fahrenheit: number;
+    feelsLike: {
+      celsius: number;
+      fahrenheit: number;
+    }
   };
-  current: {
-    temp_c: number;
-    temp_f: number;
-    condition: {
-      text: string;
-      icon: string;
-      code: number;
-    };
-    wind_kph: number;
-    humidity: number;
-    feelslike_c: number;
+  condition: {
+    text: string;
+    icon: string;
+    code: number;
   };
+  wind: {
+    kph: number;
+    mph: number;
+    direction: string;
+  };
+  humidity: number;
+  cloud: number;
+  uv: number;
+  weatherClass: string;
+  localTime: string;
 }
 
 // Default/fallback weather data
@@ -94,20 +103,26 @@ const MOCK_WEATHER_DATA: { [key: string]: WeatherData } = {
 };
 
 // Helper function to map weather condition codes to our format
-const mapWeatherData = (apiData: WeatherApiResponse): WeatherData => {
+const mapWeatherData = (apiData: WeatherApiResponse | Record<string, any>): WeatherData => {
   try {
+    // Check if apiData and required properties exist
+    if (!apiData?.condition?.text) {
+      console.error("Invalid weather API response:", apiData);
+      return DEFAULT_WEATHER;
+    }
+    
     // Extract the main weather condition
-    const conditionText = apiData.current.condition.text;
+    const conditionText = apiData.condition.text;
     const mainWeather = conditionText.split(' ')[0]; // Take first word as main condition
     
     return {
       main: mainWeather,
       description: conditionText,
-      temp: apiData.current.temp_c,
-      humidity: apiData.current.humidity,
-      windSpeed: apiData.current.wind_kph / 3.6, // Convert km/h to m/s
-      icon: apiData.current.condition.icon,
-      location: apiData.location.name
+      temp: apiData.temperature?.celsius ?? 20,
+      humidity: apiData.humidity ?? 60,
+      windSpeed: apiData.wind?.kph ? apiData.wind.kph / 3.6 : 5, // Convert km/h to m/s
+      icon: apiData.condition.icon ?? "//cdn.weatherapi.com/weather/64x64/day/113.png",
+      location: apiData.location ?? "Cosmic Space"
     };
   } catch (error) {
     console.error("Error mapping weather data:", error);
@@ -149,11 +164,16 @@ export const fetchWeatherByCoords = async (
     return await new Promise<WeatherData>((resolve) => {
       $.ajax({
         // Use our Next.js API route instead of calling WeatherAPI directly
-        url: `/api/weather?lat=${lat}&lon=${lon}`,
+        url: `/api/weather?q=${lat},${lon}`,
         method: 'GET',
         dataType: 'json',
         success: function(response) {
           console.log("Weather API response:", response);
+          if (!response?.condition?.text) {
+            console.error("Invalid weather API response:", response);
+            resolve(DEFAULT_WEATHER);
+            return;
+          }
           resolve(mapWeatherData(response));
         },
         error: function(error) {
@@ -178,32 +198,37 @@ export const fetchWeatherByCoords = async (
 };
 
 export const fetchWeatherByCity = async (
-  city: string
+  location: string
 ): Promise<WeatherData> => {
   try {
-    // If the city is "Cosmic Space", return the default weather
-    if (city === "Cosmic Space") {
+    // If the location is "Cosmic Space", return the default weather
+    if (location === "Cosmic Space") {
       return DEFAULT_WEATHER;
     }
     
     return await new Promise<WeatherData>((resolve) => {
-      // Use "London" as default if city is empty or undefined
-      const cityName = city && city.trim() !== "" ? city : "London";
+      // Use "London" as default if location is empty or undefined
+      const locationName = location && location.trim() !== "" ? location : "London";
       
       $.ajax({
         // Use our Next.js API route instead of calling WeatherAPI directly
-        url: `/api/weather?city=${encodeURIComponent(cityName)}`,
+        url: `/api/weather?location=${encodeURIComponent(locationName)}`,
         method: 'GET',
         dataType: 'json',
         success: function(response) {
           console.log("Weather API response:", response);
+          if (!response?.condition?.text) {
+            console.error("Invalid weather API response:", response);
+            resolve(DEFAULT_WEATHER);
+            return;
+          }
           resolve(mapWeatherData(response));
         },
         error: function(error) {
           console.error("Weather API error:", error);
           
-          // Generate mock data based on city name
-          const mockData = getMockWeatherData(cityName);
+          // Generate mock data based on location name
+          const mockData = getMockWeatherData(locationName);
           console.log("Using mock weather data:", mockData);
           
           // Resolve with mock data instead of rejecting

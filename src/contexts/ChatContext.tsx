@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useMemo, useCallback } from 'react';
 
 // Types
 export type ChatMessage = {
@@ -28,7 +28,7 @@ type ChatContextType = {
 const defaultUserData: UserData = {
   name: '',
   about: '',
-  personality: 'friendly and helpful',
+  personality: 'authentic and relatable',
   mood: 'neutral',
 };
 
@@ -104,7 +104,7 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, [messages, userId]);
 
   // Send a message to the AI
-  const sendMessage = async (content: string) => {
+  const sendMessage = useCallback(async (content: string) => {
     if (!content.trim() || !userId) return;
 
     // Create a new user message
@@ -173,10 +173,10 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [messages, userData, userId]);
 
   // Update user data
-  const updateUserData = async (data: UserData) => {
+  const updateUserData = useCallback(async (data: UserData) => {
     if (!userId) return;
 
     try {
@@ -185,10 +185,10 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     } catch (error) {
       console.error('Error updating user data:', error);
     }
-  };
+  }, [userId]);
 
   // Clear chat history
-  const clearChat = async () => {
+  const clearChat = useCallback(async () => {
     if (!userId) return;
 
     try {
@@ -197,20 +197,21 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     } catch (error) {
       console.error('Error clearing chat:', error);
     }
-  };
+  }, [userId]);
+
+  // Memoize the context value to prevent unnecessary re-renders
+  const contextValue = useMemo(() => ({
+    messages,
+    userData,
+    isLoading,
+    userId,
+    sendMessage,
+    updateUserData,
+    clearChat,
+  }), [messages, userData, isLoading, userId, sendMessage, updateUserData, clearChat]);
 
   return (
-    <ChatContext.Provider
-      value={{
-        messages,
-        userData,
-        isLoading,
-        userId,
-        sendMessage,
-        updateUserData,
-        clearChat,
-      }}
-    >
+    <ChatContext.Provider value={contextValue}>
       {children}
     </ChatContext.Provider>
   );

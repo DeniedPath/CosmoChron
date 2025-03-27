@@ -1,13 +1,15 @@
+"use client";
+
 import React from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
+import { usePathname } from 'next/navigation';
 import { MessageSquare, Home, Settings } from 'lucide-react';
 
 const ChatNavigation: React.FC = () => {
-  const router = useRouter();
+  const pathname = usePathname();
   
   const isActive = (path: string) => {
-    return router.pathname === path;
+    return pathname === path;
   };
 
   return (

@@ -1,6 +1,8 @@
+"use client";
+
 import React from 'react';
 import MiniGameCard from './MiniGameCard';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { toast } from '@/components/ui/use-toast';
 
 const MiniGames = () => {

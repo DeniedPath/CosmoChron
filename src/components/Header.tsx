@@ -10,42 +10,42 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ cosmicPoints }) => {
   return (
-    <header className="flex items-center justify-between mb-12">
-      <div className="flex items-center space-x-3">
-        <Rocket className="w-7 h-7 text-cosmic-highlight" />
-        <h1 className="text-2xl font-bold cosmic-highlight">CosmoChron</h1>
+    <header className="flex items-center justify-between mb-12 p-4 border border-cosmic-gold rounded-lg shadow-md">
+      <div className="flex items-center space-x-3 border-r border-cosmic-gold pr-4">
+        <Rocket className="w-7 h-7 text-cosmic-gold" />
+        <h1 className="text-2xl font-bold text-cosmic-gold">CosmoChron</h1>
       </div>
       
       <div className="flex items-center space-x-4">
-        <div className="hidden sm:flex">
+        <div className="hidden sm:flex border border-cosmic-gold rounded-lg p-2">
           <WeatherDisplay compact />
         </div>
         
-        <div className="bg-cosmic-blue/20 border border-cosmic-highlight/20 rounded-full py-1 px-3 flex items-center">
-          <Trophy className="h-4 w-4 text-cosmic-highlight mr-1.5" />
-          <span className="text-sm text-cosmic-white">{cosmicPoints} points</span>
+        <div className="bg-cosmic-blue/40 border border-cosmic-gold rounded-full py-1 px-3 flex items-center">
+          <Trophy className="h-4 w-4 text-cosmic-gold mr-1.5" />
+          <span className="text-sm font-medium text-cosmic-white">{cosmicPoints} points</span>
         </div>
         
         <div className="flex space-x-2">
           <Button 
             variant="ghost" 
             size="icon"
-            className="rounded-full h-9 w-9 bg-cosmic-blue/20 hover:bg-cosmic-blue/30 text-cosmic-white/70"
+            className="rounded-full h-9 w-9 bg-cosmic-blue/40 hover:bg-cosmic-blue/60 text-cosmic-white border border-cosmic-gold"
             asChild
           >
             <Link href="/help">
-              <HelpCircle className="h-5 w-5" />
+              <HelpCircle className="h-5 w-5 text-cosmic-gold" />
             </Link>
           </Button>
           
           <Button 
             variant="ghost" 
             size="icon"
-            className="rounded-full h-9 w-9 bg-cosmic-blue/20 hover:bg-cosmic-blue/30 text-cosmic-white/70"
+            className="rounded-full h-9 w-9 bg-cosmic-blue/40 hover:bg-cosmic-blue/60 text-cosmic-white border border-cosmic-gold"
             asChild
           >
             <Link href="/settings">
-              <Settings className="h-5 w-5" />
+              <Settings className="h-5 w-5 text-cosmic-gold" />
             </Link>
           </Button>
         </div>

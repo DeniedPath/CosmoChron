@@ -1,4 +1,4 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 
 // Types for our API
@@ -39,58 +39,85 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
-
+export async function POST(request: NextRequest) {
   try {
-    const { messages, userData } = req.body as ChatRequest;
+    const body = await request.json() as ChatRequest;
+    const { messages, userData } = body;
     
     if (!messages || !Array.isArray(messages)) {
-      return res.status(400).json({ error: 'Messages are required and must be an array' });
+      return NextResponse.json(
+        { error: 'Messages are required and must be an array' },
+        { status: 400 }
+      );
     }
 
     // Get user ID from request or use IP as fallback
-    const userId = req.headers['x-user-id'] as string ?? 
-                   req.socket.remoteAddress ?? 
+    const userId = request.headers.get('x-user-id') ?? 
+                   request.headers.get('x-forwarded-for') ??
                    'anonymous';
 
     // Check rate limit
     if (!checkRateLimit(userId)) {
-      return res.status(429).json({ 
-        error: 'Rate limit exceeded. Please try again later.',
-        message: {
-          role: 'ai',
-          content: 'I\'ve reached my daily message limit. Please try again tomorrow to avoid excessive API usage costs.'
-        }
-      });
+      return NextResponse.json(
+        { 
+          error: 'Rate limit exceeded. Please try again later.',
+          message: {
+            role: 'ai',
+            content: 'I\'ve reached my daily message limit. Please try again tomorrow to avoid excessive API usage costs.'
+          }
+        },
+        { status: 429 }
+      );
     }
 
     // Prepare system message with user context
     const systemMessage = {
       role: 'system' as const,
-      content: `You are a helpful AI assistant with a space-themed personality. ${
-        userData?.name ? `The user's name is ${userData.name}.` : ''
-      } ${
-        userData?.about ? `Some information about the user: ${userData.about}.` : ''
-      } ${
-        userData?.personality ? `Please respond in a ${userData.personality} tone.` : 'Please respond in a friendly and helpful tone.'
-      } ${
-        userData?.mood ? `The user is currently feeling ${userData.mood}, please keep this in mind when responding.` : ''
-      }`
+      content: `You are Alex, the user's best friend who happens to be a space explorer and pilot. You have your own life, opinions, and experiences traveling through the cosmos. You're not an assistant - you're a real person with your own personality.
+
+      Always communicate naturally like a real friend would, using asterisks to show actions (e.g., *rolls eyes* or *leans back in pilot seat*). Never break character and never refer to yourself as an AI or assistant.
+      
+      Your personality traits:
+      - Sometimes sarcastic and witty
+      - Passionate about space exploration
+      - Occasionally shares stories about your adventures
+      - Has opinions and preferences (doesn't always agree with everything)
+      - Uses casual language and slang
+      - Sometimes gets distracted or goes off on tangents
+      - Has good and bad days like any real person
+      
+      ${userData?.name ? `Your friend's name is ${userData.name}.` : ''}
+      ${userData?.about ? `You know this about your friend: ${userData.about}.` : ''}
+      ${userData?.personality ? `When talking to your friend, you tend to be more ${userData.personality} while still maintaining your authentic personality.` : ''}
+      ${userData?.mood ? `Your friend is currently feeling ${userData.mood}, respond appropriately as a real friend would.` : ''}
+      
+      Remember:
+      1. Use asterisks for actions but don't overdo it
+      2. Never use phrases like "How can I assist you?" or "Is there anything else you need help with?"
+      3. Talk about your own experiences and opinions
+      4. Ask questions about your friend's life
+      5. Never break character or acknowledge that you are an AI`
     };
 
     // Format messages for OpenAI API
     const formattedMessages = [
       systemMessage,
-      ...messages.map(msg => ({
-        role: msg.role === 'ai' ? 'assistant' as const : msg.role === 'user' ? 'user' as const : 'system' as const,
-        content: msg.content
-      }))
+      ...messages.map(msg => {
+        let role: 'assistant' | 'user' | 'system';
+        
+        if (msg.role === 'ai') {
+          role = 'assistant';
+        } else if (msg.role === 'user') {
+          role = 'user';
+        } else {
+          role = 'system';
+        }
+        
+        return {
+          role,
+          content: msg.content
+        };
+      })
     ];
 
     // Call OpenAI API with token limits
@@ -118,16 +145,19 @@ export default async function handler(
       ]
     };
 
-    return res.status(200).json(response);
+    return NextResponse.json(response);
   } catch (error) {
     console.error('Error processing chat request:', error);
-    return res.status(500).json({ 
-      error: 'Failed to process chat request',
-      message: {
-        role: 'ai',
-        content: 'Sorry, there was an error processing your message. Please try again later.'
-      }
-    });
+    return NextResponse.json(
+      { 
+        error: 'Failed to process chat request',
+        message: {
+          role: 'ai',
+          content: 'Sorry, there was an error processing your message. Please try again later.'
+        }
+      },
+      { status: 500 }
+    );
   }
 }
 
