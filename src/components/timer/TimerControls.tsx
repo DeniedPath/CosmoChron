@@ -58,10 +58,10 @@ const TimerControls: React.FC<TimerControlsProps> = ({
           onClick={onReset}
           variant="outline"
           size="icon"
-          className="h-12 w-12 rounded-full border-cosmic-highlight/30 bg-cosmic-blue/20 hover:bg-cosmic-blue/30 transition-all duration-300"
+          className="h-12 w-12 rounded-full border-cosmic-gold bg-cosmic-blue/20 hover:bg-cosmic-blue/30 transition-all duration-300"
           disabled={state === 'idle'}
         >
-          <RotateCcw className="h-5 w-5 text-cosmic-highlight" />
+          <RotateCcw className="h-5 w-5 text-cosmic-gold" />
         </Button>
 
         {/* Start/Pause Button */}
@@ -69,7 +69,7 @@ const TimerControls: React.FC<TimerControlsProps> = ({
           onClick={state === 'running' ? onPause : onStart}
           variant="outline"
           size="icon"
-          className="h-16 w-16 rounded-full border-cosmic-highlight bg-cosmic-purple/50 hover:bg-cosmic-purple/70 transition-all duration-300"
+          className="h-16 w-16 rounded-full border-cosmic-gold bg-cosmic-purple/50 hover:bg-cosmic-purple/70 transition-all duration-300"
         >
           {state === 'running' ? (
             <Pause className="h-7 w-7 text-cosmic-white" />
@@ -83,10 +83,10 @@ const TimerControls: React.FC<TimerControlsProps> = ({
           onClick={onSkip}
           variant="outline"
           size="icon"
-          className="h-12 w-12 rounded-full border-cosmic-highlight/30 bg-cosmic-blue/20 hover:bg-cosmic-blue/30 transition-all duration-300"
+          className="h-12 w-12 rounded-full border-cosmic-gold bg-cosmic-blue/20 hover:bg-cosmic-blue/30 transition-all duration-300"
           disabled={state === 'idle'}
         >
-          <SkipForward className="h-5 w-5 text-cosmic-highlight" />
+          <SkipForward className="h-5 w-5 text-cosmic-gold" />
         </Button>
       </div>
 
@@ -141,7 +141,7 @@ const TimerControls: React.FC<TimerControlsProps> = ({
               Custom
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-80 bg-cosmic-blue/90 border-cosmic-highlight/20 backdrop-blur-lg">
+          <PopoverContent className="w-80 bg-cosmic-blue/90 border-cosmic-gold/20 backdrop-blur-lg">
             <div className="space-y-4">
               <h4 className="font-medium text-cosmic-white text-center">Set Custom Time</h4>
               <div className="px-4">

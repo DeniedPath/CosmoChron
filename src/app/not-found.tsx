@@ -13,7 +13,7 @@ export default function NotFound() {
           <div className="text-center space-y-6">
             <h1 className="text-4xl font-bold text-white">404 - Lost in Space</h1>
             <p className="text-xl text-gray-300">
-              Houston, we have a problem. The page you're looking for has drifted into deep space.
+              Houston, we have a problem. The page you&#39;re looking for has drifted into deep space.
             </p>
             <div className="mt-8">
               <Button asChild variant="default">

@@ -1,10 +1,18 @@
+"use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Book, Save, Trash2, X } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardFooter, CardHeader } from '../ui/card';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { useNotes } from '@/hooks/useNotes';
+
+interface Note {
+  id: string;
+  content: string;
+  createdAt: string;
+  updatedAt: string;
+}
 
 const Notepad = () => {
   const { notes, addNote, updateNote, deleteNote, activeNote, setActiveNote } = useNotes();
@@ -20,45 +28,69 @@ const Notepad = () => {
     }
   }, [activeNote]);
 
-  const handleSave = () => {
+  const handleSave = useCallback(() => {
     if (activeNote) {
       updateNote(activeNote.id, noteContent);
     } else {
       addNote(noteContent);
     }
-  };
+  }, [activeNote, noteContent, addNote, updateNote]);
 
-  const handleNewNote = () => {
+  const handleNewNote = useCallback(() => {
     setActiveNote(null);
     setNoteContent('');
-  };
+  }, [setActiveNote]);
 
-  const handleNoteSelect = (note) => {
+  const handleNoteSelect = useCallback((note: Note) => {
     setActiveNote(note);
-  };
+  }, [setActiveNote]);
 
-  const handleDelete = () => {
+  const handleDelete = useCallback(() => {
     if (activeNote) {
       deleteNote(activeNote.id);
       setActiveNote(null);
       setNoteContent('');
     }
-  };
+  }, [activeNote, deleteNote, setActiveNote]);
+
+  // Create a formatted note count string
+  const getNoteCountText = useCallback(() => {
+    if (notes.length === 0) {
+      return 'Click to add notes';
+    }
+    return `${notes.length} note${notes.length !== 1 ? 's' : ''} saved`;
+  }, [notes.length]);
+
+  // Prevent the Popover from auto-closing when clicking inside
+  const handlePopoverInteraction = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+  }, []);
 
   return (
-    <Popover open={isOpen} onOpenChange={setIsOpen}>
+    <Popover open={isOpen} onOpenChange={(open) => {
+      // Only allow state changes from outside interactions
+      if (!open || !isOpen) {
+        setIsOpen(open);
+      }
+    }}>
       <PopoverTrigger asChild>
         <Button 
           variant="ghost" 
-          size="icon"
-          className="rounded-full h-9 w-9 bg-cosmic-blue/20 hover:bg-cosmic-blue/30 text-cosmic-white/70"
+          className="flex items-center justify-start w-full rounded-lg px-3 py-2 bg-cosmic-blue/20 hover:bg-cosmic-blue/30 text-cosmic-white/70 text-left"
         >
-          <Book className="h-5 w-5" />
+          <Book className="h-5 w-5 mr-2 flex-shrink-0" />
+          <div className="flex-1 overflow-hidden">
+            <span className="block font-medium">Cosmic Notes</span>
+            <span className="block text-xs text-cosmic-white/50 truncate">
+              {getNoteCountText()}
+            </span>
+          </div>
         </Button>
       </PopoverTrigger>
       <PopoverContent 
         side="left" 
         className="w-[350px] md:w-[450px] p-0 bg-cosmic-dark border border-cosmic-highlight/20 backdrop-blur-md"
+        onClick={handlePopoverInteraction}
       >
         <Card className="border-0 bg-transparent shadow-none text-cosmic-white">
           <CardHeader className="flex flex-row items-center justify-between p-4 pb-2 border-b border-cosmic-highlight/20">
@@ -94,10 +126,10 @@ const Notepad = () => {
               ) : (
                 <div className="space-y-2 max-h-[200px] overflow-y-auto pr-2">
                   {notes.map((note) => (
-                    <div 
+                    <button 
                       key={note.id}
                       onClick={() => handleNoteSelect(note)}
-                      className={`p-2 rounded cursor-pointer text-sm transition-colors truncate
+                      className={`w-full text-left p-2 rounded cursor-pointer text-sm transition-colors truncate
                         ${activeNote?.id === note.id 
                           ? "bg-cosmic-purple/40 text-cosmic-white" 
                           : "hover:bg-cosmic-blue/20 text-cosmic-white/70"
@@ -105,7 +137,7 @@ const Notepad = () => {
                     >
                       {note.content.substring(0, 24)}
                       {note.content.length > 24 ? "..." : ""}
-                    </div>
+                    </button>
                   ))}
                 </div>
               )}

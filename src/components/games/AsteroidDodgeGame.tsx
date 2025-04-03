@@ -124,7 +124,7 @@ const AsteroidDodgeGame: React.FC = () => {
       canvas.removeEventListener('mousemove', handleMouseMove);
       canvas.removeEventListener('touchmove', handleTouchMove);
     };
-  }, [gameStarted, gameOver]);
+  }, [gameStarted, gameOver, spaceship.height, spaceship.width, spaceship.x, spaceship.y]);
   
   // Game loop
   useEffect(() => {
@@ -250,7 +250,7 @@ const AsteroidDodgeGame: React.FC = () => {
         cancelAnimationFrame(animationFrameRef.current);
       }
     };
-  }, [gameStarted, gameOver, highScore]);
+  }, [gameStarted, gameOver, highScore, spaceship.height, spaceship.width, spaceship.x, spaceship.y]);
   
   const startGame = () => {
     setGameStarted(true);

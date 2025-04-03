@@ -43,7 +43,7 @@ const DailyFocusChart: React.FC<DailyFocusChartProps> = ({ dateRange }) => {
   );
   
   // Custom tooltip for the chart
-  const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>) => {
+  const CustomTooltip = ({ active, payload }: TooltipProps<number, string>) => {
     if (active && payload && payload.length) {
       const data = payload[0].payload;
       return (

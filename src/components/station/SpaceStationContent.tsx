@@ -103,7 +103,7 @@ const SpaceStationContent: React.FC = () => {
     } catch (e) {
       console.error("Error loading space station data:", e);
     }
-  }, []);
+  }, [level]);
   
   return (
     <div className="space-y-6">

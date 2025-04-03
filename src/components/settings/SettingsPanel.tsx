@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Settings, User, Palette, Bell, Moon, Sun, Sparkles } from 'lucide-react';
+import { User, Palette, Bell, Moon, Sun } from 'lucide-react';
 import { toast } from '@/components/ui/use-toast';
 
 const SettingsPanel: React.FC = () => {

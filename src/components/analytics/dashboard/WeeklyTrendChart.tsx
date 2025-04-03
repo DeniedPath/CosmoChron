@@ -1,20 +1,20 @@
 import React, { useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { 
+  ResponsiveContainer, 
   LineChart, 
   Line, 
   BarChart,
   Bar,
+  Cell,
   XAxis, 
   YAxis, 
   CartesianGrid, 
   Tooltip, 
-  ResponsiveContainer,
-  TooltipProps,
-  Legend
+  TooltipProps
 } from 'recharts';
 import { DateRange, getWeeklyFocusData } from '@/utils/analytics/dataProcessing';
-import { TrendingUp, ArrowUp, ArrowDown, Minus } from 'lucide-react';
+import { ArrowUp, ArrowDown, Minus } from 'lucide-react';
 
 interface WeeklyTrendChartProps {
   dateRange: DateRange;
@@ -75,7 +75,7 @@ const WeeklyTrendChart: React.FC<WeeklyTrendChartProps> = ({ dateRange }) => {
   }, [weeklyData]);
   
   // Custom tooltip for the chart
-  const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>) => {
+  const CustomTooltip = ({ active, payload }: TooltipProps<number, string>) => {
     if (active && payload && payload.length) {
       const data = payload[0].payload;
       return (
@@ -273,10 +273,17 @@ const WeeklyTrendChart: React.FC<WeeklyTrendChartProps> = ({ dateRange }) => {
                   <Tooltip content={<CustomTooltip />} />
                   <Bar 
                     dataKey="change" 
-                    name="Change in Minutes"
+                    name="Change" 
                     radius={[4, 4, 0, 0]}
-                    fill={(data) => data.change >= 0 ? "#4ade80" : "#f87171"}
-                  />
+                    fill="#8B5CF6" // Default color
+                  >
+                    {weeklyChanges.slice(1).map((entry, index) => (
+                      <Cell 
+                        key={`cell-${index}`} 
+                        fill={entry.change >= 0 ? "#4ade80" : "#ef4444"} 
+                      />
+                    ))}
+                  </Bar>
                 </BarChart>
               </ResponsiveContainer>
             ) : (

@@ -4,12 +4,11 @@
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 import { DateRange, getSessionsByDateRange, calculateProductivityScore, exportDataAsCSV } from './dataProcessing';
-import { getSessions } from '../timerUtils';
 
 // Extend jsPDF with autotable
 declare module 'jspdf' {
   interface jsPDF {
-    autoTable: (options: any) => jsPDF;
+    autoTable: (options: jsPDF.AutoTableOptions) => jsPDF;
   }
 }
 
@@ -126,7 +125,7 @@ export const generatePDFReport = (options: ReportOptions): jsPDF => {
       margin: { left: 20, right: 20 }
     });
     
-    yPosition = (doc as any).lastAutoTable.finalY + 10;
+    yPosition = (doc as jsPDF).lastAutoTable.finalY + 10;
   }
   
   // Add session list if requested

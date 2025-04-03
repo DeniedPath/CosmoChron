@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
@@ -11,15 +10,15 @@ const RankSystem = () => {
   
   return (
     <div className="w-full max-w-md mx-auto animate-scale-up">
-      <div className="glass-panel rounded-xl p-5 space-y-4">
+      <div className="glass-panel rounded-xl p-5 space-y-4 border border-cosmic-gold">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm text-cosmic-white/70">Current Rank</p>
-            <h3 className="cosmic-highlight text-xl font-semibold">{title}</h3>
+            <h3 className="text-cosmic-gold text-xl font-semibold">{title}</h3>
           </div>
           
           <Badge 
-            className="bg-cosmic-purple/30 hover:bg-cosmic-purple/40 backdrop-blur-md border border-cosmic-highlight/30 text-cosmic-white px-3 py-1"
+            className="bg-cosmic-purple/30 hover:bg-cosmic-purple/40 backdrop-blur-md border border-cosmic-gold text-cosmic-white px-3 py-1"
           >
             Level {level}
           </Badge>

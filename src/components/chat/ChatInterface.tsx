@@ -101,7 +101,7 @@ const ChatInterface: React.FC = () => {
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Message Alex..."
+              placeholder="Message Cosmo..."
               className="flex-1 bg-cosmic-blue/20 text-cosmic-white rounded-lg px-4 py-2 border border-cosmic-highlight/20 focus:outline-none focus:ring-2 focus:ring-cosmic-purple/50"
               disabled={isLoading}
             />

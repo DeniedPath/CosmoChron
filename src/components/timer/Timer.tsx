@@ -123,7 +123,7 @@ const Timer = () => {
       
       {/* Space Fact (shown after completion) */}
       {spaceFact && state === 'completed' && isClient && (
-        <div className="bg-cosmic-blue/30 border border-cosmic-highlight/30 rounded-lg p-4 max-w-md mb-6 animate-fadeIn">
+        <div className="bg-cosmic-blue/30 border border-cosmic-gold rounded-lg p-4 max-w-md mb-6 animate-fadeIn">
           <h3 className="text-cosmic-highlight font-medium mb-2">Space Fact</h3>
           <p className="text-cosmic-white/90">{spaceFact}</p>
         </div>
@@ -132,7 +132,7 @@ const Timer = () => {
       {/* Features Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full max-w-4xl mt-4 px-2">
         {/* Breathing Guide */}
-        <div className="bg-cosmic-blue/20 border border-cosmic-highlight/20 rounded-lg p-4">
+        <div className="bg-cosmic-blue/20 border border-cosmic-gold rounded-lg p-4">
           <h3 className="text-lg font-medium text-cosmic-white mb-3">Breathing Guide</h3>
           <p className="text-cosmic-white/70 mb-4">Take a moment to breathe and center yourself before or after a focus session.</p>
           
@@ -150,7 +150,7 @@ const Timer = () => {
         </div>
         
         {/* Notepad */}
-        <div className="bg-cosmic-blue/20 border border-cosmic-highlight/20 rounded-lg p-4">
+        <div className="bg-cosmic-blue/20 border border-cosmic-gold rounded-lg p-4">
           <h3 className="text-lg font-medium text-cosmic-white mb-3">Session Notes</h3>
           <p className="text-cosmic-white/70 mb-4">Jot down your thoughts or tasks for this focus session.</p>
           <Notepad />

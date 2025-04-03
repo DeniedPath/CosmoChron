@@ -103,7 +103,7 @@ const MOCK_WEATHER_DATA: { [key: string]: WeatherData } = {
 };
 
 // Helper function to map weather condition codes to our format
-const mapWeatherData = (apiData: WeatherApiResponse | Record<string, any>): WeatherData => {
+const mapWeatherData = (apiData: WeatherApiResponse | WeatherApiResponse): WeatherData => {
   try {
     // Check if apiData and required properties exist
     if (!apiData?.condition?.text) {
@@ -167,7 +167,7 @@ export const fetchWeatherByCoords = async (
         url: `/api/weather?q=${lat},${lon}`,
         method: 'GET',
         dataType: 'json',
-        success: function(response) {
+        success: function(response: WeatherApiResponse) {
           console.log("Weather API response:", response);
           if (!response?.condition?.text) {
             console.error("Invalid weather API response:", response);
@@ -215,7 +215,7 @@ export const fetchWeatherByCity = async (
         url: `/api/weather?location=${encodeURIComponent(locationName)}`,
         method: 'GET',
         dataType: 'json',
-        success: function(response) {
+        success: function(response: WeatherApiResponse) {
           console.log("Weather API response:", response);
           if (!response?.condition?.text) {
             console.error("Invalid weather API response:", response);

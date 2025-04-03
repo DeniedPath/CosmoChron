@@ -4,7 +4,7 @@ import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { DateRange, createCustomDateRange } from '@/utils/analytics/dataProcessing';
-import { Calendar as CalendarIcon, ChevronDown } from 'lucide-react';
+import { Calendar as CalendarIcon } from 'lucide-react';
 import { format } from 'date-fns';
 
 interface DateRangeSelectorProps {
@@ -18,32 +18,9 @@ const DateRangeSelector: React.FC<DateRangeSelectorProps> = ({
   onCustomRange,
   activeRange
 }) => {
-  const [date, setDate] = useState<Date | undefined>(new Date());
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [customStartDate, setCustomStartDate] = useState<Date>(new Date());
   const [customEndDate, setCustomEndDate] = useState<Date>(new Date());
-  
-  // Handle custom date range selection
-  const handleCustomDateSelect = (selectedDate: Date | undefined) => {
-    if (!selectedDate) return;
-    
-    if (!customStartDate || (customStartDate && customEndDate)) {
-      // Start a new selection
-      setCustomStartDate(selectedDate);
-      setCustomEndDate(selectedDate);
-    } else {
-      // Complete the selection
-      if (selectedDate < customStartDate) {
-        setCustomStartDate(selectedDate);
-      } else {
-        setCustomEndDate(selectedDate);
-        // Create and apply the custom range
-        const customRange = createCustomDateRange(customStartDate, selectedDate);
-        onCustomRange(customRange);
-        setIsCalendarOpen(false);
-      }
-    }
-  };
   
   // Format the display of the date range
   const formatDateRange = () => {
@@ -101,7 +78,7 @@ const DateRangeSelector: React.FC<DateRangeSelectorProps> = ({
         <PopoverContent className="w-auto p-0 bg-cosmic-blue/90 border-cosmic-highlight/20" align="end">
           <Calendar
             mode="range"
-            defaultMonth={date}
+            defaultMonth={new Date()}
             selected={{
               from: customStartDate,
               to: customEndDate

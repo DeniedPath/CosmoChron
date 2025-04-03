@@ -10,7 +10,7 @@ const ChatExample: React.FC = () => {
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-cosmic-white">
           <MessageSquare className="h-5 w-5" />
-          Meet Alex - Your Space Explorer Friend
+          Meet  Cosmo- Your Space Explorer Friend
         </CardTitle>
         <CardDescription className="text-cosmic-white/70">
           Chat with your cosmic companion who has their own life and adventures
@@ -53,7 +53,7 @@ const ChatExample: React.FC = () => {
         <div className="flex items-center gap-2 bg-cosmic-blue/5 p-3 rounded-lg text-cosmic-white/60 text-sm">
           <Info className="h-4 w-4" />
           <p>
-            Alex has their own personality, stories, and opinions. They&apos;ll talk to you like a real friend would, complete with their own experiences and perspectives.
+            Cosmo has their own personality, stories, and opinions. They&apos;ll talk to you like a real friend would, complete with their own experiences and perspectives.
           </p>
         </div>
       </CardContent>

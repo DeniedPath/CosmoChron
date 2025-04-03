@@ -112,7 +112,7 @@ export const getDailyFocusData = (range: { startDate: Date; endDate: Date }) => 
   const dailyData: { [key: string]: number } = {};
   
   // Initialize all days in the range
-  let currentDate = new Date(range.startDate);
+  const currentDate = new Date(range.startDate);
   while (currentDate <= range.endDate) {
     const dateStr = currentDate.toISOString().split('T')[0];
     dailyData[dateStr] = 0;
@@ -378,7 +378,7 @@ export const getOptimalFocusTimes = (range: { startDate: Date; endDate: Date }) 
   });
   
   // Find optimal day
-  let optimalDay = Object.entries(dayStats)
+  const optimalDay = Object.entries(dayStats)
     .map(([day, stats]) => ({
       day,
       avgMinutes: stats.count > 0 ? stats.totalMinutes / stats.count : 0,
@@ -387,7 +387,7 @@ export const getOptimalFocusTimes = (range: { startDate: Date; endDate: Date }) 
     .sort((a, b) => b.avgMinutes - a.avgMinutes)[0];
   
   // Find optimal time
-  let optimalTime = Object.entries(timeStats)
+  const optimalTime = Object.entries(timeStats)
     .map(([time, stats]) => ({
       time,
       avgMinutes: stats.count > 0 ? stats.totalMinutes / stats.count : 0,
@@ -511,7 +511,7 @@ export const generateProductivityForecast = (days: number = 30) => {
 /**
  * Export data as CSV format
  */
-export const exportDataAsCSV = (data: Record<string, any>[]): string => {
+export const exportDataAsCSV = (data: Record<string, number | string>[]): string => {
   if (!data || data.length === 0) return '';
   
   const headers = Object.keys(data[0]);

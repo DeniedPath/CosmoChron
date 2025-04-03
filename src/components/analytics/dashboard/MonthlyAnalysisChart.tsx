@@ -85,12 +85,12 @@ const MonthlyAnalysisChart: React.FC<MonthlyAnalysisChartProps> = ({ dateRange }
   const COLORS = ['#8B5CF6', '#6366F1', '#EC4899', '#F97316', '#10B981', '#3B82F6', '#EF4444', '#F59E0B'];
   
   // Custom tooltip for the charts
-  const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>) => {
+  const CustomTooltip = ({ active, payload }: TooltipProps<number, string>) => {
     if (active && payload && payload.length) {
       const data = payload[0].payload;
       return (
         <div className="cosmic-blur p-3 rounded-md border border-cosmic-highlight/20">
-          <p className="text-cosmic-white text-sm font-medium">{data.label || data.name}</p>
+          <p className="text-cosmic-white text-sm font-medium">{data.name}</p>
           <p className="text-cosmic-white/80 text-sm">
             <span className="font-medium">{payload[0].value}</span> minutes of focus time
           </p>
@@ -321,8 +321,15 @@ const MonthlyAnalysisChart: React.FC<MonthlyAnalysisChartProps> = ({ dateRange }
                     dataKey="change" 
                     name="Change in Minutes"
                     radius={[4, 4, 0, 0]}
-                    fill={(data) => data.change >= 0 ? "#4ade80" : "#f87171"}
-                  />
+                    fill="#4ade80" // Default color
+                  >
+                    {monthComparisonData.slice(1).map((entry, index) => (
+                      <Cell 
+                        key={`cell-${index}`} 
+                        fill={entry.change >= 0 ? "#4ade80" : "#f87171"} 
+                      />
+                    ))}
+                  </Bar>
                 </BarChart>
               </ResponsiveContainer>
             ) : (

@@ -35,7 +35,7 @@ const MissionSystem = () => {
         <Button
           size="sm"
           onClick={() => handleClaimReward(mission.id)}
-          className="bg-cosmic-highlight hover:bg-cosmic-highlight/90 text-xs h-7 px-2"
+          className="bg-cosmic-gold hover:bg-cosmic-gold/90 text-xs h-7 px-2"
         >
           <Award className="w-3 h-3 mr-1" />
           Claim Reward
@@ -47,19 +47,19 @@ const MissionSystem = () => {
     if (mission.claimed) {
       return (
         <>
-          <span className="text-cosmic-highlight/70 mr-2">Claimed</span>
+          <span className="text-cosmic-gold/70 mr-2">Claimed</span>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button 
                 size="sm" 
                 variant="outline" 
-                className="border-cosmic-highlight/30 bg-cosmic-blue/10 hover:bg-cosmic-blue/20 text-xs h-7 px-2"
+                className="border-cosmic-gold bg-cosmic-blue/10 hover:bg-cosmic-blue/20 text-xs h-7 px-2"
               >
                 <Share2 className="w-3 h-3 mr-1" />
                 Share
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="bg-cosmic-blue/90 border-cosmic-highlight/30 backdrop-blur-lg text-cosmic-white">
+            <DropdownMenuContent className="bg-cosmic-blue/90 border-cosmic-gold backdrop-blur-lg text-cosmic-white">
               <DropdownMenuItem 
                 className="flex items-center cursor-pointer hover:bg-cosmic-purple/20"
                 onClick={() => handleShareMission(mission, 'twitter')}
@@ -178,7 +178,7 @@ const MissionSystem = () => {
     <div className="space-y-6 max-w-xl mx-auto">
       {/* Active Mission */}
       {activeMission && (
-        <Card className="bg-cosmic-blue/20 border-cosmic-highlight/30 backdrop-blur-lg overflow-hidden relative">
+        <Card className="bg-cosmic-blue/20 border-cosmic-gold backdrop-blur-lg overflow-hidden relative">
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/10 to-blue-500/5" />
           </div>
@@ -187,7 +187,7 @@ const MissionSystem = () => {
               <CardTitle className="text-cosmic-white text-xl">Current Mission</CardTitle>
               <Badge 
                 variant="outline" 
-                className="border-cosmic-highlight bg-cosmic-purple/20 text-cosmic-white"
+                className="border-cosmic-gold bg-cosmic-purple/20 text-cosmic-white"
               >
                 {activeMission.type}
               </Badge>
@@ -211,7 +211,7 @@ const MissionSystem = () => {
               />
             </div>
             <div className="mt-4 text-sm text-cosmic-white/70">
-              <p>Reward: <span className="text-cosmic-highlight">{activeMission.rewardPoints} cosmic points</span></p>
+              <p>Reward: <span className="text-cosmic-gold">{activeMission.rewardPoints} cosmic points</span></p>
             </div>
           </CardContent>
         </Card>
@@ -226,17 +226,17 @@ const MissionSystem = () => {
             {missions.map(mission => (
               <Card 
                 key={mission.id}
-                className={`bg-cosmic-blue/20 border-cosmic-highlight/30 backdrop-blur-lg transition-all duration-300 ${
-                  mission.completed ? 'border-cosmic-highlight/50' : ''
+                className={`bg-cosmic-blue/20 border-cosmic-gold backdrop-blur-lg transition-all duration-300 ${
+                  mission.completed ? 'border-cosmic-gold' : ''
                 } ${mission.claimed ? 'opacity-70' : ''}`}
               >
                 <CardHeader className="py-3 px-4">
                   <div className="flex justify-between items-center">
                     <div className="flex items-center space-x-2">
                       {mission.completed && mission.claimed ? (
-                        <CheckCircle2 className="w-4 h-4 text-cosmic-highlight" />
+                        <CheckCircle2 className="w-4 h-4 text-cosmic-gold" />
                       ) : mission.completed ? (
-                        <Trophy className="w-4 h-4 text-cosmic-highlight animate-pulse-subtle" />
+                        <Trophy className="w-4 h-4 text-cosmic-gold animate-pulse-subtle" />
                       ) : (
                         <Rocket className="w-4 h-4 text-cosmic-white/70" />
                       )}
@@ -246,7 +246,7 @@ const MissionSystem = () => {
                     </div>
                     <Badge 
                       variant="outline" 
-                      className="border-cosmic-highlight/20 bg-cosmic-purple/10 text-cosmic-white/70 text-xs"
+                      className="border-cosmic-gold/20 bg-cosmic-purple/10 text-cosmic-white/70 text-xs"
                     >
                       {mission.type}
                     </Badge>

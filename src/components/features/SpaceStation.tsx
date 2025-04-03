@@ -1,9 +1,7 @@
-
 import React from 'react';
 import { Progress } from '@/components/ui/progress';
 import { Card, CardContent } from '@/components/ui/card';
 import { Rocket, Star, Award, Shield } from 'lucide-react';
-import { getTotalFocusMinutes, getRank } from '@/utils/timerUtils';
 
 interface SpaceStationProps {
   totalMinutes?: number;
@@ -18,21 +16,21 @@ const SpaceStation: React.FC<SpaceStationProps> = ({
 }) => {
   // Space station modules based on progress/level
   const modules = [
-    { name: 'Core Module', threshold: 0, icon: <Rocket className="h-8 w-8 text-cosmic-highlight" /> },
+    { name: 'Core Module', threshold: 0, icon: <Rocket className="h-8 w-8 text-cosmic-gold" /> },
     { name: 'Research Lab', threshold: 120, icon: <Star className="h-8 w-8 text-yellow-400" /> },
     { name: 'Observatory', threshold: 300, icon: <Award className="h-8 w-8 text-cyan-400" /> },
     { name: 'Defense Shield', threshold: 600, icon: <Shield className="h-8 w-8 text-purple-400" /> },
   ];
   
   // Determine which modules are unlocked
-  const unlockedModules = modules.filter(module => totalMinutes >= module.threshold);
+  // const unlockedModules = modules.filter(module => totalMinutes >= module.threshold);
   
   return (
     <div className="w-full space-y-6 animate-fade-in">
-      <Card className="cosmic-blur overflow-hidden relative">
+      <Card className="cosmic-blur overflow-hidden relative border border-cosmic-gold">
         <CardContent className="p-6">
           <div className="relative z-10">
-            <h3 className="cosmic-highlight text-xl font-semibold mb-2">Your Space Station</h3>
+            <h3 className="text-cosmic-gold text-xl font-semibold mb-2">Your Space Station</h3>
             <p className="text-cosmic-white/70 mb-6 text-sm">
               Expand your cosmic base by focusing more
             </p>
@@ -45,8 +43,8 @@ const SpaceStation: React.FC<SpaceStationProps> = ({
                     key={index}
                     className={`relative aspect-square rounded-xl flex flex-col items-center justify-center p-3 border transition-all duration-300 ${
                       isUnlocked 
-                        ? 'bg-cosmic-blue/30 border-cosmic-highlight/40' 
-                        : 'bg-cosmic-blue/10 border-cosmic-highlight/10 opacity-50'
+                        ? 'bg-cosmic-blue/30 border-cosmic-gold' 
+                        : 'bg-cosmic-blue/10 border-cosmic-gold/10 opacity-50'
                     }`}
                   >
                     <div className={`mb-2 transition-transform duration-300 ${isUnlocked ? 'scale-100' : 'scale-75'}`}>

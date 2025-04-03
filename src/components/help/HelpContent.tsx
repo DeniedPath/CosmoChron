@@ -32,7 +32,7 @@ const HelpContent: React.FC = () => {
                 <ol className="list-decimal list-inside mt-2 space-y-1">
                   <li>Navigate to the Timer tab on the main screen</li>
                   <li>Set your desired focus time using the slider or preset buttons</li>
-                  <li>Click the "Start Focus Session" button</li>
+                  <li>Click the &quot;Start Focus Session&quot; button</li>
                   <li>The timer will begin counting down immediately</li>
                 </ol>
               </AccordionContent>
@@ -43,9 +43,9 @@ const HelpContent: React.FC = () => {
               <AccordionContent className="text-cosmic-white/70">
                 <p>Yes, you can control your timer in several ways:</p>
                 <ul className="list-disc list-inside mt-2 space-y-1">
-                  <li>Click the "Pause" button to temporarily stop the timer</li>
-                  <li>Click "Resume" to continue from where you left off</li>
-                  <li>Click "Reset" to stop the current session and reset the timer</li>
+                  <li>Click the &quot;Pause&quot; button to temporarily stop the timer</li>
+                  <li>Click &quot;Resume&quot; to continue from where you left off</li>
+                  <li>Click &quot;Reset&quot; to stop the current session and reset the timer</li>
                   <li>The floating timer can be minimized by clicking the minimize button</li>
                 </ul>
               </AccordionContent>
@@ -54,7 +54,7 @@ const HelpContent: React.FC = () => {
             <AccordionItem value="item-3">
               <AccordionTrigger className="text-cosmic-white">What is the Pomodoro technique?</AccordionTrigger>
               <AccordionContent className="text-cosmic-white/70">
-                <p>The Pomodoro Technique is a time management method that uses a timer to break work into intervals, traditionally 25 minutes in length, separated by short breaks. These intervals are known as "pomodoros".</p>
+                <p>The Pomodoro Technique is a time management method that uses a timer to break work into intervals, traditionally 25 minutes in length, separated by short breaks. These intervals are known as &quot;pomodoros&quot;.</p>
                 <p className="mt-2">Our app supports this technique by allowing you to:</p>
                 <ul className="list-disc list-inside mt-2 space-y-1">
                   <li>Set focus sessions (default 25 minutes)</li>
@@ -99,7 +99,7 @@ const HelpContent: React.FC = () => {
               <AccordionContent className="text-cosmic-white/70">
                 <p>Yes, your chat data is stored locally on your device and is not shared with third parties. We use the following privacy measures:</p>
                 <ul className="list-disc list-inside mt-2 space-y-1">
-                  <li>Chat history is stored in your browser's local storage</li>
+                  <li>Chat history is stored in your browser&apos;s local storage</li>
                   <li>Your conversations are not used to train AI models</li>
                   <li>You can clear your chat history at any time from the settings</li>
                 </ul>
@@ -127,7 +127,7 @@ const HelpContent: React.FC = () => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-cosmic-white">
             <Star className="h-5 w-5" />
-            Rank System & Rewards
+            Rank System &amp; Rewards
           </CardTitle>
           <CardDescription className="text-cosmic-white/70">
             Understanding the progression system
@@ -141,7 +141,7 @@ const HelpContent: React.FC = () => {
                 <p>The rank system tracks your progress based on your total focus time:</p>
                 <ul className="list-disc list-inside mt-2 space-y-1">
                   <li>You gain experience for each minute of completed focus time</li>
-                  <li>As you accumulate focus time, you'll progress through different ranks</li>
+                  <li>As you accumulate focus time, you&apos;ll progress through different ranks</li>
                   <li>Each rank has a unique space-themed title and icon</li>
                   <li>Higher ranks unlock additional features and customization options</li>
                 </ul>
@@ -168,7 +168,7 @@ const HelpContent: React.FC = () => {
                 <p>Missions are special challenges that reward you with bonus Cosmic Points:</p>
                 <ol className="list-decimal list-inside mt-2 space-y-1">
                   <li>View available missions on the Missions tab</li>
-                  <li>Each mission has specific requirements (e.g., "Complete 5 focus sessions in a day")</li>
+                  <li>Each mission has specific requirements (e.g., &quot;Complete 5 focus sessions in a day&quot;)</li>
                   <li>Progress is tracked automatically as you use the app</li>
                   <li>Claim your rewards when a mission is completed</li>
                 </ol>
@@ -199,7 +199,7 @@ const HelpContent: React.FC = () => {
                   <li>Go to Settings → Appearance</li>
                   <li>Choose between Light and Dark themes</li>
                   <li>Adjust star brightness and effects if desired</li>
-                  <li>Click "Save Appearance" to apply your changes</li>
+                  <li>Click &quot;Save Appearance&quot; to apply your changes</li>
                 </ol>
               </AccordionContent>
             </AccordionItem>
@@ -223,7 +223,7 @@ const HelpContent: React.FC = () => {
                 <p>If you need to reset your progress:</p>
                 <ol className="list-decimal list-inside mt-2 space-y-1">
                   <li>Go to Settings → Data Management</li>
-                  <li>Click "Reset Progress"</li>
+                  <li>Click &quot;Reset Progress&quot;</li>
                   <li>Confirm your choice in the dialog</li>
                 </ol>
                 <p className="mt-2 text-red-400">Warning: This action cannot be undone and will reset all your stats, ranks, and earned points.</p>
@@ -291,7 +291,7 @@ const HelpContent: React.FC = () => {
         <HelpCircle className="h-12 w-12 mx-auto text-cosmic-white/60 mb-4" />
         <h3 className="text-xl font-medium text-cosmic-white mb-2">Still need help?</h3>
         <p className="text-cosmic-white/70 mb-4">
-          If you couldn't find the answer to your question, you can ask our AI assistant directly.
+          If you couldn&apos;t find the answer to your question, you can ask our AI assistant directly.
         </p>
         <a 
           href="/chat" 

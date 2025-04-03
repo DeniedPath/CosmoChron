@@ -13,7 +13,7 @@ import {
 
 const TabsNavigation: React.FC = () => {
   return (
-    <TabsList className="grid grid-cols-8 w-full max-w-lg mx-auto mb-8 bg-cosmic-blue/20 border border-cosmic-highlight/20 backdrop-blur-md">
+    <TabsList className="grid grid-cols-8 w-full max-w-lg mx-auto mb-8 bg-cosmic-blue/20 border border-cosmic-gold backdrop-blur-md">
       <TabsTrigger 
         value="timer"
         className="data-[state=active]:bg-cosmic-purple/40 data-[state=active]:text-cosmic-white"

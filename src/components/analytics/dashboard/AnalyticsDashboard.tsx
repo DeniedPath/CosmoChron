@@ -7,10 +7,7 @@ import {
   Calendar, 
   TrendingUp, 
   FileText, 
-  PieChart as PieChartIcon, 
-  Download,
-  Filter,
-  RefreshCw
+  Download
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -21,6 +18,8 @@ import WeeklyTrendChart from './WeeklyTrendChart';
 import MonthlyAnalysisChart from './MonthlyAnalysisChart';
 import YearlyComparisonChart from './YearlyComparisonChart';
 import DateRangeSelector from './DateRangeSelector';
+
+// import { PieChartIcon, Filter, RefreshCw } from 'lucide-react'; // Removed unused import
 
 const AnalyticsDashboard: React.FC = () => {
   // Date range state

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 // Define the structure of the weather API response
-type WeatherResponse = {
+interface WeatherResponse {
   location: {
     name: string;
     region: string;
@@ -27,6 +27,7 @@ type WeatherResponse = {
     feelslike_c: number;
     feelslike_f: number;
     uv: number;
+    is_day: number;
   };
 };
 
