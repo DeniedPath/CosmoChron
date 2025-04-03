@@ -5,11 +5,13 @@ import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 import { DateRange, getSessionsByDateRange, calculateProductivityScore, exportDataAsCSV } from './dataProcessing';
 
-// Extend jsPDF with autotable
+// Extend jsPDF with autotable (already declared in jspdf-autotable.d.ts)
 declare module 'jspdf' {
-  interface jsPDF {
-    autoTable: (options: jsPDF.AutoTableOptions) => jsPDF;
-  }
+    interface jsPDF {
+        lastAutoTable: {
+            finalY: number;
+        };
+    }
 }
 
 export interface ReportOptions {
@@ -43,7 +45,7 @@ export const generatePDFReport = (options: ReportOptions): jsPDF => {
   // Add date range
   doc.setFontSize(12);
   doc.setTextColor(100, 100, 100);
-  const dateRangeText = `${dateRange.startDate.toLocaleDateString()} - ${dateRange.endDate.toLocaleDateString()}`;
+  const dateRangeText = `${dateRange.from.toLocaleDateString()} - ${dateRange.to.toLocaleDateString()}`;
   doc.text(dateRangeText, 105, 22, { align: 'center' });
   
   // Add line separator
@@ -125,7 +127,7 @@ export const generatePDFReport = (options: ReportOptions): jsPDF => {
       margin: { left: 20, right: 20 }
     });
     
-    yPosition = (doc as jsPDF).lastAutoTable.finalY + 10;
+    yPosition = doc.lastAutoTable.finalY + 10;
   }
   
   // Add session list if requested
@@ -154,7 +156,7 @@ export const generatePDFReport = (options: ReportOptions): jsPDF => {
       body: sessionDetails.map(session => [
         session.date,
         session.time,
-        session.duration
+        session.duration.toString()
       ]),
       theme: 'grid',
       headStyles: { fillColor: [110, 86, 207], textColor: [255, 255, 255] },
@@ -198,7 +200,7 @@ export const generateCSVReport = (dateRange: DateRange): string => {
     };
   });
   
-  return exportDataAsCSV(formattedSessions, 'focus_sessions');
+  return exportDataAsCSV(formattedSessions);
 };
 
 /**

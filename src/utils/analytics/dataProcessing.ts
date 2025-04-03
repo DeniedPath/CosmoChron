@@ -6,18 +6,18 @@ import { getSessions } from '../timerUtils';
 /**
  * Get sessions filtered by date range
  */
-export const getSessionsByDateRange = (range: { startDate: Date; endDate: Date }): { timestamp: string; durationMinutes: number; completed: boolean }[] => {
+export const getSessionsByDateRange = (range: { from: Date; to: Date }): { timestamp: string; durationMinutes: number; completed: boolean }[] => {
   const sessions = getSessions();
   return sessions.filter(session => {
     const sessionDate = new Date(session.timestamp);
-    return sessionDate >= range.startDate && sessionDate <= range.endDate;
+    return sessionDate >= range.from && sessionDate <= range.to;
   });
 };
 
 /**
  * Get predefined date ranges for analytics
  */
-export const getDateRanges = (): { [key: string]: { startDate: Date; endDate: Date } } => {
+export const getDateRanges = (): { [key: string]: { from: Date; to: Date } } => {
   const today = new Date();
   today.setHours(23, 59, 59, 999);
   
@@ -56,40 +56,40 @@ export const getDateRanges = (): { [key: string]: { startDate: Date; endDate: Da
 
   return {
     today: {
-      startDate: new Date(today.setHours(0, 0, 0, 0)),
-      endDate: new Date(today.setHours(23, 59, 59, 999))
+      from: new Date(today.setHours(0, 0, 0, 0)),
+      to: new Date(today.setHours(23, 59, 59, 999))
     },
     yesterday: {
-      startDate: yesterday,
-      endDate: new Date(yesterday.getTime()).setHours(23, 59, 59, 999) as unknown as Date
+      from: yesterday,
+      to: new Date(yesterday.getTime()).setHours(23, 59, 59, 999) as unknown as Date
     },
     thisWeek: {
-      startDate: startOfWeek,
-      endDate: today
+      from: startOfWeek,
+      to: today
     },
     lastWeek: {
-      startDate: startOfLastWeek,
-      endDate: endOfLastWeek
+      from: startOfLastWeek,
+      to: endOfLastWeek
     },
     thisMonth: {
-      startDate: startOfMonth,
-      endDate: today
+      from: startOfMonth,
+      to: today
     },
     lastMonth: {
-      startDate: startOfLastMonth,
-      endDate: endOfLastMonth
+      from: startOfLastMonth,
+      to: endOfLastMonth
     },
     thisYear: {
-      startDate: startOfYear,
-      endDate: today
+      from: startOfYear,
+      to: today
     },
     lastYear: {
-      startDate: startOfLastYear,
-      endDate: endOfLastYear
+      from: startOfLastYear,
+      to: endOfLastYear
     },
     allTime: {
-      startDate: new Date(0),
-      endDate: today
+      from: new Date(0),
+      to: today
     }
   };
 };
@@ -97,23 +97,23 @@ export const getDateRanges = (): { [key: string]: { startDate: Date; endDate: Da
 /**
  * Create a custom date range
  */
-export const createCustomDateRange = (startDate: Date, endDate: Date): { startDate: Date; endDate: Date } => {
+export const createCustomDateRange = (from: Date, to: Date): { from: Date; to: Date } => {
   return {
-    startDate: new Date(startDate.setHours(0, 0, 0, 0)),
-    endDate: new Date(endDate.setHours(23, 59, 59, 999))
+    from: new Date(from.setHours(0, 0, 0, 0)),
+    to: new Date(to.setHours(23, 59, 59, 999))
   };
 };
 
 /**
  * Get daily focus data for a date range
  */
-export const getDailyFocusData = (range: { startDate: Date; endDate: Date }) => {
+export const getDailyFocusData = (range: { from: Date; to: Date }) => {
   const sessions = getSessionsByDateRange(range);
   const dailyData: { [key: string]: number } = {};
   
   // Initialize all days in the range
-  const currentDate = new Date(range.startDate);
-  while (currentDate <= range.endDate) {
+  let currentDate = new Date(range.from);
+  while (currentDate <= range.to) {
     const dateStr = currentDate.toISOString().split('T')[0];
     dailyData[dateStr] = 0;
     const nextDate = new Date(currentDate);
@@ -139,7 +139,7 @@ export const getDailyFocusData = (range: { startDate: Date; endDate: Date }) => 
 /**
  * Get weekly focus data for a date range
  */
-export const getWeeklyFocusData = (range: { startDate: Date; endDate: Date }) => {
+export const getWeeklyFocusData = (range: { from: Date; to: Date }) => {
   const sessions = getSessionsByDateRange(range);
   const weeklyData: { [key: string]: number } = {};
   
@@ -170,7 +170,7 @@ export const getWeeklyFocusData = (range: { startDate: Date; endDate: Date }) =>
 /**
  * Get monthly focus data for a date range
  */
-export const getMonthlyFocusData = (range: { startDate: Date; endDate: Date }) => {
+export const getMonthlyFocusData = (range: { from: Date; to: Date }) => {
   const sessions = getSessionsByDateRange(range);
   const monthlyData: { [key: string]: number } = {};
   
@@ -198,7 +198,7 @@ export const getMonthlyFocusData = (range: { startDate: Date; endDate: Date }) =
 /**
  * Get yearly focus data for a date range
  */
-export const getYearlyFocusData = (range: { startDate: Date; endDate: Date }) => {
+export const getYearlyFocusData = (range: { from: Date; to: Date }) => {
   const sessions = getSessionsByDateRange(range);
   const yearlyData: { [key: string]: number } = {};
   
@@ -221,7 +221,7 @@ export const getYearlyFocusData = (range: { startDate: Date; endDate: Date }) =>
 /**
  * Get year-over-year comparison data (monthly breakdown for each year)
  */
-export const getYearlyComparisonData = (range: { startDate: Date; endDate: Date }) => {
+export const getYearlyComparisonData = (range: { from: Date; to: Date }) => {
   const sessions = getSessionsByDateRange(range);
   const yearMonthData: { [key: string]: { [month: string]: number } } = {};
   const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -261,7 +261,7 @@ export const getYearlyComparisonData = (range: { startDate: Date; endDate: Date 
 /**
  * Calculate productivity score based on session data
  */
-export const calculateProductivityScore = (range: { startDate: Date; endDate: Date }): { score: number; level: string; description: string } => {
+export const calculateProductivityScore = (range: { from: Date; to: Date }): { score: number; level: string; description: string } => {
   const sessions = getSessionsByDateRange(range);
   
   if (sessions.length === 0) {
@@ -278,7 +278,7 @@ export const calculateProductivityScore = (range: { startDate: Date; endDate: Da
   
   const completionRate = sessions.filter(s => s.completed).length / sessions.length;
   
-  const daysInRange = Math.ceil((range.endDate.getTime() - range.startDate.getTime()) / (1000 * 60 * 60 * 24));
+  const daysInRange = Math.ceil((range.to.getTime() - range.from.getTime()) / (1000 * 60 * 60 * 24));
   const daysActive = new Set(sessions.map(s => new Date(s.timestamp).toISOString().split('T')[0])).size;
   const consistencyRate = daysActive / daysInRange;
   
@@ -326,7 +326,7 @@ export const calculateProductivityScore = (range: { startDate: Date; endDate: Da
 /**
  * Identify optimal focus times based on historical data
  */
-export const getOptimalFocusTimes = (range: { startDate: Date; endDate: Date }) => {
+export const getOptimalFocusTimes = (range: { from: Date; to: Date }) => {
   const sessions = getSessionsByDateRange(range);
   const completedSessions = sessions.filter(s => s.completed);
   
@@ -526,4 +526,17 @@ export const exportDataAsCSV = (data: Record<string, number | string>[]): string
   ];
   
   return csvRows.join('\n');
+};
+
+// Define and export DateRange if missing
+export type DateRange = {
+  from: Date;
+  to: Date;
+};
+
+// Define and export the ProductivityScore type
+export type ProductivityScore = {
+  score: number;
+  level: string;
+  description: string;
 };

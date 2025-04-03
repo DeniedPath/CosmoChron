@@ -3,13 +3,13 @@ import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { DateRange, createCustomDateRange } from '@/utils/analytics/dataProcessing';
+import { DateRange as CustomDateRange, createCustomDateRange } from '@/utils/analytics/dataProcessing';
 import { Calendar as CalendarIcon } from 'lucide-react';
 import { format } from 'date-fns';
 
 interface DateRangeSelectorProps {
   onRangeChange: (rangeKey: string) => void;
-  onCustomRange: (range: DateRange) => void;
+  onCustomRange: (range: CustomDateRange) => void;
   activeRange: string;
 }
 
@@ -83,7 +83,7 @@ const DateRangeSelector: React.FC<DateRangeSelectorProps> = ({
               from: customStartDate,
               to: customEndDate
             }}
-            onSelect={(range) => {
+            onSelect={(range: { from?: Date; to?: Date } | undefined) => {
               if (range?.from) {
                 setCustomStartDate(range.from);
                 if (range.to) {

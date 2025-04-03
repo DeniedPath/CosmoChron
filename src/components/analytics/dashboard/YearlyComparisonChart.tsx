@@ -249,14 +249,14 @@ const YearlyComparisonChart: React.FC<YearlyComparisonChartProps> = ({ dateRange
                   <Legend />
                   {yearlyData.map((year, index) => (
                     <Line 
-                      key={year.name}
+                      key={year.year} // Use 'year.year' instead of 'year.name'
                       type="monotone" 
-                      dataKey={year.name} 
+                      dataKey={year.year} // Use 'year.year' instead of 'year.name'
                       stroke={index === 0 ? "#8B5CF6" : index === 1 ? "#EC4899" : index === 2 ? "#10B981" : "#F97316"} 
                       strokeWidth={2}
                       dot={{ fill: index === 0 ? "#8B5CF6" : index === 1 ? "#EC4899" : index === 2 ? "#10B981" : "#F97316", strokeWidth: 2, r: 4 }}
                       activeDot={{ fill: "#D946EF", strokeWidth: 0, r: 6 }}
-                      name={year.name}
+                      name={year.year} // Use 'year.year' instead of 'year.name'
                     />
                   ))}
                 </LineChart>
@@ -285,7 +285,7 @@ const YearlyComparisonChart: React.FC<YearlyComparisonChartProps> = ({ dateRange
                 {yearlyData.length === 0 ? (
                   "No focus sessions recorded in this period."
                 ) : yearlyData.length === 1 ? (
-                  `You've recorded ${yearlyData[0].minutes} minutes of focus time in ${yearlyData[0].name}. Continue tracking to see year-over-year patterns.`
+                  `You've recorded ${yearlyData[0].minutes} minutes of focus time in ${yearlyData[0].year}. Continue tracking to see year-over-year patterns.`
                 ) : yearOverYearGrowth && yearOverYearGrowth.direction === 'up' ? (
                   `Your focus time has increased by ${yearOverYearGrowth.changePercent}% compared to the previous year. This shows excellent progress in your productivity habits.`
                 ) : yearOverYearGrowth && yearOverYearGrowth.direction === 'down' ? (
@@ -332,7 +332,7 @@ const YearlyComparisonChart: React.FC<YearlyComparisonChartProps> = ({ dateRange
                 ) : yearlyData.length < 2 ? (
                   "Continue tracking your focus sessions across multiple years to establish meaningful patterns."
                 ) : bestYear && bestYear.minutes > 0 ? (
-                  `Analyze what made ${bestYear.name} your most productive year (${bestYear.minutes} minutes) and try to replicate those conditions. Set a goal to exceed this benchmark in the current year.`
+                  `Analyze what made ${bestYear.year} your most productive year (${bestYear.minutes} minutes) and try to replicate those conditions. Set a goal to exceed this benchmark in the current year.`
                 ) : yearOverYearGrowth && yearOverYearGrowth.direction === 'down' ? (
                   "Your focus time has decreased compared to the previous year. Set specific goals to reverse this trend, such as scheduling regular focus blocks or implementing a productivity system."
                 ) : (

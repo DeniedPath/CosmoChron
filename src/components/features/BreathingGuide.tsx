@@ -106,6 +106,8 @@ const BreathingGuide: React.FC<BreathingGuideProps> = ({
             setCurrentCycle(nextCycle);
           });
           break;
+        default:
+          break;
       }
       
       // Update state and progress in a batched update
